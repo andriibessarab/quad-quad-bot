@@ -22,7 +22,7 @@
 
 | Part Name                           | Qty | Mass (g) | Est. Cost (CAD) | Link                                                                                                 |
 |:------------------------------------|:----|:---------|:----------------|:-----------------------------------------------------------------------------------------------------|
-| EMAX ES08MD                         | 12  | 13       | 15.99           | [Roter Village](https://rotorvillage.ca/emax-es08md-ii-13g-mini-metal-digital-servo/)                |
+| Hiwonder HPS-0618SG                 | 12  | 14.5     | 33.16           | [Amazon](https://www.amazon.com/Hiwonder-Coreless-0-06sec-Stainless-Robotic/dp/B09TVNFN5N)           |
 | F683ZZ Flanged Bearings             | 12  | 1.8      | 16.59 / 10      | [Amazon](https://www.amazon.ca/uxcell-Flanged-Bearing-Shielded-Bearings/dp/B07Z3DRZX9)               |
 | 30 Sets Servo Connector Male Female | 1   |          | 19.99           | [Amazon](https://www.amazon.ca/Connector-Compatible-Spektrum-Connectors-Crimping/dp/B0CL9RGGC1?th=1) |
 
