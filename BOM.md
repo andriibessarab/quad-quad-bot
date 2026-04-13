@@ -12,19 +12,19 @@
 
 | Part Name                                          | Qty | Mass (g) | Est. Cost (CAD) | Link                                                                                         |
 |:---------------------------------------------------|:----|:---------|:----------------|:---------------------------------------------------------------------------------------------|
-| Matek H743-SLIM Flight Controller V4               | 1   | 7.0      | 138.99          | [Rotor Village](https://rotorvillage.ca/matek-h743-slim-flight-controller-v4/)               |
-| Skystars KO40 40A 4-in-1 ESC                       | 1   | 5.4      | 49.99           | [Rotor Village](https://rotorvillage.ca/skystars-ko40-blheli_s-20x20-esc/)                   |
+| SpeedyBee F405 Mini BLS 35A 20x20mm Stack          | 1   | 13.5     | 89.99           | [Great Hobbies](https://www.greathobbies.com/productinfo/?prod_id=SPBF4MINI-ST)              |
 | FlyFishRC Flash 1804 3500KV                        | 4   | 14.0     | 22.99           | [Rotor Village](https://rotorvillage.ca/flyfishrc-flash-1804-3500kv-freestyle-motor/)        |
 | Gemfan Hurricane T3525 Props (2CW+2CCW)            | 1   | 3.78     | 4.69            | [Rotor Village](https://rotorvillage.ca/gemfan-51433-hurricane-tri-blade-prop-2cw-2ccw/)     |
 | Radiomaster RP2 V2 TCXO ExpressLRS 2.4GHz Receiver | 1   | 0.55     | 27.99           | [Rotor Village](https://rotorvillage.ca/radiomaster-rp2-v2-tcxo-expresslrs-2-4ghz-receiver/) |
 
-## Actuation Systems
+## Actuation & Limb Control
 
-| Part Name                           | Qty | Mass (g) | Est. Cost (CAD) | Link                                                                                                 |
-|:------------------------------------|:----|:---------|:----------------|:-----------------------------------------------------------------------------------------------------|
-| Hiwonder HPS-0618SG                 | 12  | 14.5     | 33.16           | [Amazon](https://www.amazon.com/Hiwonder-Coreless-0-06sec-Stainless-Robotic/dp/B09TVNFN5N)           |
-| F683ZZ Flanged Bearings             | 12  | 1.8      | 16.59 / 10      | [Amazon](https://www.amazon.ca/uxcell-Flanged-Bearing-Shielded-Bearings/dp/B07Z3DRZX9)               |
-| 30 Sets Servo Connector Male Female | 1   |          | 19.99           | [Amazon](https://www.amazon.ca/Connector-Compatible-Spektrum-Connectors-Crimping/dp/B0CL9RGGC1?th=1) |
+| Part Name                                            | Qty | Mass (g) | Est. Cost (CAD) | Link                                                                                                 |
+|:-----------------------------------------------------|:----|:---------|:----------------|:-----------------------------------------------------------------------------------------------------|
+| JZK PCA9685 16 Channel 12-Bit PWM Servo Motor Driver | 1   | 11.0     | 10.59           | [Amazon](https://www.amazon.ca/JZK-PCA9685-Channel-12-Bit-Arduino/dp/B06XSFFXQY)                     |
+| Hiwonder HPS-0618SG                                  | 12  | 14.5     | 33.16           | [Amazon](https://www.amazon.com/Hiwonder-Coreless-0-06sec-Stainless-Robotic/dp/B09TVNFN5N)           |
+| F683ZZ Flanged Bearings                              | 12  | 1.8      | 16.59 / 10      | [Amazon](https://www.amazon.ca/uxcell-Flanged-Bearing-Shielded-Bearings/dp/B07Z3DRZX9)               |
+| 30 Sets Servo Connector Male Female                  | 1   |          | 19.99           | [Amazon](https://www.amazon.ca/Connector-Compatible-Spektrum-Connectors-Crimping/dp/B0CL9RGGC1?th=1) |
 
 ## Power Distribution
 
