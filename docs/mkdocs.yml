@@ -3,6 +3,7 @@ site_description: Documentation for an ongoing project building a robot that is 
 site_author: Andrii Bessarab
 
 docs_dir: .
+site_dir: ../site
 
 theme:
   name: material
