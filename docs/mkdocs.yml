@@ -1,0 +1,50 @@
+site_name: Quad-Quad Bot
+site_description: Documentation for an ongoing project building a robot that is both quad-ruped and quad-copter.
+site_author: Andrii Bessarab
+
+docs_dir: .
+
+theme:
+  name: material
+  logo: assets/images/logo.png
+  favicon: assets/images/logo.png
+  features:
+    - navigation.sections
+    - navigation.indexes
+  palette:
+    - scheme: slate
+  icon:
+    repo: fontawesome/brands/github
+
+repo_url: https://github.com/andriibessarab/quad-quad-bot
+repo_name: See on GitHub
+
+plugins:
+  - search
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: date
+      fallback_to_build_date: true
+  - minify:
+      minify_html: true
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+extra_javascript:
+  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
+  - javascripts/mermaid-init.js
+  - javascripts/mathjax.js
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/logo-tweak.css
