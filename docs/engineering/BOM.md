@@ -24,13 +24,12 @@
 | **PWM PWM Servo Driver** | JZK PCA9685 16 Channel 12-Bit PWM Servo Motor Driver | 1   | 11.0     | 10.59           | [Amazon](https://www.amazon.ca/JZK-PCA9685-Channel-12-Bit-Arduino/dp/B06XSFFXQY)                     |
 | **Limb Servos**          | Hiwonder HPS-0618SG                                  | 12  | 14.5     | 33.16           | [Amazon](https://www.amazon.com/Hiwonder-Coreless-0-06sec-Stainless-Robotic/dp/B09TVNFN5N)           |
 | **Joint Bearings**       | F683ZZ Flanged Bearings                              | 12  | 1.8      | 16.59 / 10      | [Amazon](https://www.amazon.ca/uxcell-Flanged-Bearing-Shielded-Bearings/dp/B07Z3DRZX9)               |
-| **Servo Wires**          | 30 Sets Servo Connector Male Female                  | 1   |          | 19.99           | [Amazon](https://www.amazon.ca/Connector-Compatible-Spektrum-Connectors-Crimping/dp/B0CL9RGGC1?th=1) |
 
 ## Power Distribution
 
-| Component                   | Part Name                            | Qty | Mass (g) | Est. Cost (CAD) | Link                                                                                                                                             |
-|:----------------------------|:-------------------------------------|:----|:---------|:----------------|:-------------------------------------------------------------------------------------------------------------------------------------------------|
-| **Battery**                 | Tattu R-Line 850mAh 4S 95C Lipo XT30 | 1   | 104 ± 20 | 29.99           | [Roter Village](https://rotorvillage.ca/tattu-r-line-850mah-4s-95c-lipo-xt30/)                                                                   |
-| **High-Current Servo UBEC** | Castle Creations CC BEC (10A)        | 1   | (11.0)   | 39.99           | [Great Hobbies](https://www.greathobbies.com/productinfo/?prod_id=CCR010000400&srsltid=AfmBOopFEAF_OFCxbgDRMLAbcQWOH3wwccJsuMofXGGMdQ9AnsWk54wB) |
-| **Processor UBEC**          | Matek Micro BEC (5V/9V)              | 1   | 1.0      | 13.99 / 3       | [Roter Village](https://rotorvillage.ca/Matek-Micro-BEC-6-30V-5V/9V-Adjustable/)                                                                 |
-| **Battery Pigtail**         | Amass Battery Pigtail - XT30         | 1   |          | 2.79            | [Roter Village](https://rotorvillage.ca/rotor-village-battery-pigtail-xt30-150mm-female/?searchid=1146108&search_query=XT30)                     |
+| Component                   | Part Name                                              | Qty | Mass (g) | Est. Cost (CAD) | Link                                                                                    |
+|:----------------------------|:-------------------------------------------------------|:----|:---------|:----------------|:----------------------------------------------------------------------------------------|
+| **Battery**                 | Tattu R-Line 850mAh 4S 95C Lipo XT60                   | 1   | 104 ± 20 | 30.99           | [Roter Village](https://rotorvillage.ca/tattu-r-line-850mah-4s-95c-lipo-xt60)           |
+| **High-Current Servo UBEC** | Hobbywing UBEC 25A HV                                  | 1   | 74.0     | 106.99          | [RotorQuest](https://rotorquest.com/products/ubec-25a-hv)                               |
+| **Processor UBEC**          | Matek Micro BEC (5V/9V)                                | 1   | 1.0      | 13.99 / 3       | [Roter Village](https://rotorvillage.ca/Matek-Micro-BEC-6-30V-5V/9V-Adjustable/)        |
+| **Battery Pigtail**         | Padarsey 2 Pair XT60 Connector 10CM Silicon Wire 14AWG | 1   |          | 9.99 / 4        | [Amazon](https://www.amazon.ca/Padarsey-Connector-Female-Housing-Silicon/dp/B07BF8154S) |
