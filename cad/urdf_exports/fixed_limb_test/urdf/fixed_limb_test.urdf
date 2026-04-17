@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="fixed_limb_test">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.012807313311312 0.00598090852226242 -0.0117251285139543"
+        rpy="0 0 0" />
+      <mass
+        value="0.00723402556361831" />
+      <inertia
+        ixx="4.05147247523767E-07"
+        ixy="3.01231584549377E-10"
+        ixz="-1.88167986432032E-08"
+        iyy="7.38938259329422E-07"
+        iyz="7.90595902470049E-10"
+        izz="5.0342421323583E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.00392156862745098 0 0.0196078431372549 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="shoulder_link">
+    <inertial>
+      <origin
+        xyz="0.00770399429191724 9.32504877206378E-06 0.0207339193469641"
+        rpy="0 0 0" />
+      <mass
+        value="0.0148104574438063" />
+      <inertia
+        ixx="1.88189230614178E-06"
+        ixy="3.01231584549858E-10"
+        ixz="1.68325026936694E-08"
+        iyy="2.59134654836223E-06"
+        iyz="-7.90595902469875E-10"
+        izz="1.39963201919848E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/shoulder_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.545098039215686 0.615686274509804 0.858823529411765 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/shoulder_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="haa_joint"
+    type="revolute">
+    <origin
+      xyz="-0.001 0.006 -0.016"
+      rpy="3.1416 -1.5708 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="shoulder_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.5708"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="femur_link">
+    <inertial>
+      <origin
+        xyz="0.0124792168310497 9.99428181540189E-06 0.0185705130302731"
+        rpy="0 0 0" />
+      <mass
+        value="0.0138239022547814" />
+      <inertia
+        ixx="8.42245738682422E-07"
+        ixy="-7.91960713042997E-10"
+        ixz="-9.47919040177247E-08"
+        iyy="3.58798405876978E-06"
+        iyz="-3.01970991415103E-10"
+        izz="3.1267090240501E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/femur_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/femur_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hfe_joint"
+    type="revolute">
+    <origin
+      xyz="0.020875 0 0.0165"
+      rpy="0 1.5708 0" />
+    <parent
+      link="shoulder_link" />
+    <child
+      link="femur_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="0"
+      upper="3.14"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="tibia_link">
+    <inertial>
+      <origin
+        xyz="0.0156981068181742 3.55361015266786E-09 7.93462496675047E-05"
+        rpy="0 0 0" />
+      <mass
+        value="0.0070755567397191" />
+      <inertia
+        ixx="1.28214686803871E-07"
+        ixy="4.5956055502833E-13"
+        ixz="1.45828471109314E-08"
+        iyy="1.81740201742321E-06"
+        iyz="-7.36270952752015E-14"
+        izz="1.83619400245263E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/tibia_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.545098039215686 0.615686274509804 0.858823529411765 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/tibia_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="knee_joint"
+    type="revolute">
+    <origin
+      xyz="0.046 0 0.0106"
+      rpy="-3.1416 0 1.5708" />
+    <parent
+      link="femur_link" />
+    <child
+      link="tibia_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-0.87267"
+      upper="0.87267"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="tab_link">
+    <inertial>
+      <origin
+        xyz="-0.00203367196621368 -6.01949046163952E-16 0.00395500792852426"
+        rpy="0 0 0" />
+      <mass
+        value="0.00116134718742782" />
+      <inertia
+        ixx="9.1005400789047E-09"
+        ixy="-7.94186594852218E-22"
+        ixz="1.61623668129035E-09"
+        iyy="8.60231140276365E-08"
+        iyz="-2.37565391241938E-23"
+        izz="9.3647667205365E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/tab_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.866666666666667 0.909803921568627 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/tab_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="kfe_motor_joint"
+    type="revolute">
+    <origin
+      xyz="0.002 0 0.0132"
+      rpy="-3.1416 0 -1.5708" />
+    <parent
+      link="femur_link" />
+    <child
+      link="tab_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-0.87267"
+      upper="0.87267"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="rod_link">
+    <inertial>
+      <origin
+        xyz="0.021999975174988 7.77439050636541E-09 -6.17363184046704E-08"
+        rpy="0 0 0" />
+      <mass
+        value="0.000929490166689096" />
+      <inertia
+        ixx="3.11724892800746E-09"
+        ixy="-1.76984253516657E-14"
+        ixz="1.0644090388813E-13"
+        iyy="1.38486128282688E-07"
+        iyz="5.69419412480685E-14"
+        izz="1.38113398710736E-07" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/rod_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.545098039215686 0.615686274509804 0.858823529411765 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://fixed_limb_test/meshes/rod_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="rod_joint"
+    type="revolute">
+    <origin
+      xyz="0.015 0 0.0045"
+      rpy="0 0 -1.5708" />
+    <parent
+      link="tab_link" />
+    <child
+      link="rod_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-0.87267"
+      upper="0.87267"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>
