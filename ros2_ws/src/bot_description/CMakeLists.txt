@@ -5,9 +5,6 @@ project(bot_description)
 find_package(ament_cmake REQUIRED)
 
 # Install the directories containing URDF and meshes
-install(
-        DIRECTORY urdf meshes
-        DESTINATION share/${PROJECT_NAME}
-)
+install(DIRECTORY urdf meshes DESTINATION share/${PROJECT_NAME})
 
 ament_package()
