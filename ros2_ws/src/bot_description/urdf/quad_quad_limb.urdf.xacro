@@ -2,6 +2,7 @@
 
 <robot name="quad_quad_limb">
     <!-- Links -->
+    <link name="world" />
     <link name="base_link">
         <inertial>
             <origin xyz="0.012807313311312 0.00598090852226242 -0.0117251285139543" rpy="0 0 0" />
@@ -136,6 +137,11 @@
     </link>
 
     <!-- Joints -->
+    <joint name="world_fixed" type="fixed">
+        <origin xyz="0 0 0.2" rpy="-1.5708 0 1.5708"/>
+        <parent link="world"/>
+        <child link="base_link"/>
+    </joint>
     <joint name="haa_joint" type="revolute">
         <origin xyz="-0.001 0.006 -0.016" rpy="0 -1.5708 0" />
         <parent link="base_link" />
