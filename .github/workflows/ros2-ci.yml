@@ -1,0 +1,68 @@
+name: ROS2 Jazzy CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  # ==========================================
+  # JOB 1: Quality Checks
+  # ==========================================
+  quality-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: ros2_ws/quality-requirements.txt
+
+      - name: Install quality tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r ros2_ws/quality-requirements.txt
+          sudo apt-get update
+          sudo apt-get install -y clang-format
+
+      - name: Run Quality Checks
+        run: ros2_ws/scripts/quality.sh check
+
+  # ==========================================
+  # JOB 2: Build & Test
+  # ==========================================
+  build-and-test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup ROS2 Jazzy
+        uses: ros-tooling/setup-ros@v0.7
+        with:
+          required-ros-distributions: jazzy
+
+      - name: Install dependencies via rosdep
+        run: |
+          sudo apt-get update
+          rosdep update
+          rosdep install --from-paths ros2_ws/src --ignore-src -y --rosdistro jazzy
+
+      - name: Build Workspace
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          cd ros2_ws
+          colcon build --symlink-install --cmake-args '-DCMAKE_BUILD_TYPE=Release'
+
+      - name: Run Tests
+        run: |
+          source /opt/ros/jazzy/setup.bash
+          cd ros2_ws
+          source install/setup.bash
+          colcon test
+          colcon test-result --all
