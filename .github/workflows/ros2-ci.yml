@@ -47,17 +47,38 @@ jobs:
         with:
           required-ros-distributions: jazzy
 
-      - name: Install dependencies via rosdep
+      - name: Install dependencies
         run: |
           sudo apt-get update
+          sudo apt-get install -y ccache
           rosdep update
           rosdep install --from-paths ros2_ws/src --ignore-src -y --rosdistro jazzy
+
+      - name: ccache storage
+        uses: actions/cache@v4
+        with:
+          path: ~/.ccache
+          key: ccache-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            ccache-${{ runner.os }}-
 
       - name: Build Workspace
         run: |
           source /opt/ros/jazzy/setup.bash
           cd ros2_ws
-          colcon build --symlink-install --cmake-args '-DCMAKE_BUILD_TYPE=Release'
+          # Configure ccache
+          export CCACHE_DIR=$HOME/.ccache
+          ccache --set-config=max_size=2G
+          ccache -z 
+          
+          colcon build \
+            --symlink-install \
+            --cmake-args \
+            '-DCMAKE_BUILD_TYPE=Release' \
+            '-DCMAKE_CXX_COMPILER_LAUNCHER=ccache' \
+            '-DCMAKE_C_COMPILER_LAUNCHER=ccache'
+          
+          ccache -s
 
       - name: Run Tests
         run: |
