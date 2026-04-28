@@ -1,4 +1,4 @@
-name: ROS2 Jazzy CI
+name: ros2-ci
 
 on:
   push:
