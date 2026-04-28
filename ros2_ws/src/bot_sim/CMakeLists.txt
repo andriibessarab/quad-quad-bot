@@ -5,6 +5,6 @@ project(bot_sim)
 find_package(ament_cmake REQUIRED)
 
 # Install the directories containing worlds and sim launch scripts
-install(DIRECTORY worlds launch DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 
 ament_package()
