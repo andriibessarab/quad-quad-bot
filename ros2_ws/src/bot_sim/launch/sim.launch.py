@@ -73,11 +73,22 @@ def generate_launch_description():
         arguments=["joint_trajectory_controller"],
     )
 
+    # Bridge the clock so ROS 2 and Gazebo stay in sync
+    clock_bridge = Node(
+        package="ros_gz_bridge",
+        executable="parameter_bridge",
+        arguments=[
+            "/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock"
+        ],
+        output="screen",
+    )
+
     return LaunchDescription([
         set_gz_path,
         gazebo,
         rsp_node,
         spawn_node,
         load_jsb,
-        load_jtc
+        load_jtc,
+        clock_bridge
     ])
