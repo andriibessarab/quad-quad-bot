@@ -18,6 +18,7 @@ class LimbCommander : public rclcpp::Node
 public:
     // alias
     using FollowJointTrajectory = control_msgs::action::FollowJointTrajectory;
+    using GoalHandleFollowJointTrajectory = rclcpp_action::ClientGoalHandle<FollowJointTrajectory>;
 
     LimbCommander() : Node("limb_controller")
     {
@@ -66,8 +67,37 @@ public:
 
         // set joints for goal
         goal.trajectory.joint_names = this->joints_;
-        
+
+        // sample trajectory point
+        trajectory_msgs::msg::JointTrajectoryPoint point;
+        point.positions = {0.5,0.2,-0.5};
+        point.time_from_start = rclcpp::Duration::from_seconds(1.0);
+
+        // add points for goal
+        goal.trajectory.points.push_back(point);
+
+        // set callback methods in goal options
+        auto send_goal_options = rclcpp_action::Client<FollowJointTrajectory>::SendGoalOptions();
+        send_goal_options.goal_response_callback = std::bind(&LimbCommander::goal_response_callback, this, std::placeholders::_1);
+        send_goal_options.feedback_callback = std::bind(&LimbCommander::feedback_callback, this, std::placeholders::_1, std::placeholders::_2);
+        send_goal_options.result_callback = std::bind(&LimbCommander::result_callback, this, std::placeholders::_1);
+
+        // Send goal
+        RCLCPP_INFO(this->get_logger(), "Sending goal...");
+        this->action_client_->async_send_goal(goal, send_goal_options);
+        RCLCPP_INFO(this->get_logger(), "Goal sent!");
     }
+
+    void goal_response_callback(const GoalHandleFollowJointTrajectory::SharedPtr &goal_handle)
+    {}
+
+    auto feedback_callback(
+        GoalHandleFollowJointTrajectory::SharedPtr goal_handle,
+        const std::shared_ptr<const FollowJointTrajectory::Feedback> feedback) -> void
+    {}
+
+    void result_callback(const GoalHandleFollowJointTrajectory::WrappedResult &result)
+    {}
 
 private:
     rclcpp_action::Client<FollowJointTrajectory>::SharedPtr action_client_;  // action client ptr
