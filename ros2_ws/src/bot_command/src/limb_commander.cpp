@@ -1,9 +1,12 @@
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "control_msgs/action/follow_joint_trajectory.hpp"
+#include "trajectory_msgs/msg/joint_trajectory.hpp"
+#include "trajectory_msgs/msg/joint_trajectory_point.hpp"
 #include <memory>
 #include <vector>
 #include <chrono>
+#include <functional>
 #include <string>
 
 // param names
@@ -33,10 +36,19 @@ public:
             this,
             action_server_name_
         );
+
+        this->timer_ = this->create_wall_timer(
+            std::chrono::milliseconds(500),
+            std::bind(&LimbCommander::send_goal, this)
+
+        );
     }
 
     void send_goal()
     {
+        // cancel timer so it only fires ones
+        this->timer_->cancel();
+
         // wait for action server to turn on
         while (!action_client_->wait_for_action_server(std::chrono::milliseconds(1000)))
         {
@@ -49,13 +61,17 @@ public:
         }
         RCLCPP_INFO(this->get_logger(), "Action server found!");
 
+        // define goal
         auto goal = FollowJointTrajectory::Goal();
+
+        // set joints for goal
         goal.trajectory.joint_names = this->joints_;
         
     }
 
 private:
     rclcpp_action::Client<FollowJointTrajectory>::SharedPtr action_client_;  // action client ptr
+    rclcpp::TimerBase::SharedPtr timer_;
 
     //params
     std::string action_server_name_;
