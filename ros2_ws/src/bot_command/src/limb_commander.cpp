@@ -89,15 +89,51 @@ public:
     }
 
     void goal_response_callback(const GoalHandleFollowJointTrajectory::SharedPtr &goal_handle)
-    {}
+    {
+        // log goal status
+        if (goal_handle == nullptr)
+        {
+            RCLCPP_ERROR(this->get_logger(), "Goal rejected by server");
+        }
+        else
+        {
+            RCLCPP_INFO(this->get_logger(), "Goal accepted by server, awaiting result");
+        }
+    }
 
     auto feedback_callback(
         GoalHandleFollowJointTrajectory::SharedPtr goal_handle,
         const std::shared_ptr<const FollowJointTrajectory::Feedback> feedback) -> void
-    {}
+    {
+        // log current positions
+        if (feedback->actual.positions.size() == joints_.size())
+        {
+            RCLCPP_INFO(this->get_logger(), "Current joint positions: %.2f %.2f %.2f",
+            feedback->actual.positions[0], feedback->actual.positions[1], feedback->actual.positions[2]);
+        }
+        else
+            RCLCPP_WARN(this->get_logger(), "Received feedback with unexpected joint count!");
+    }
 
     void result_callback(const GoalHandleFollowJointTrajectory::WrappedResult &result)
-    {}
+    {
+        // log result status
+        switch (result.code)
+        {
+            case rclcpp_action::ResultCode::SUCCEEDED:
+                RCLCPP_INFO(this->get_logger(), "Target reached successfully!");
+                break;
+            case rclcpp_action::ResultCode::ABORTED:
+                RCLCPP_ERROR(this->get_logger(), "Goal was aborted");
+                break;
+            case rclcpp_action::ResultCode::CANCELED:
+                RCLCPP_ERROR(this->get_logger(), "Goal was canceled");
+                break;
+            default:
+                RCLCPP_ERROR(this->get_logger(), "Unknown result code");
+                break;
+        }
+    }
 
 private:
     rclcpp_action::Client<FollowJointTrajectory>::SharedPtr action_client_;  // action client ptr
