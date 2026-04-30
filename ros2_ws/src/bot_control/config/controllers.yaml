@@ -10,6 +10,7 @@ controller_manager:
 
 joint_trajectory_controller:
   ros__parameters:
+    action_server_name: /joint_trajectory_controller/follow_joint_trajectory
     joints:
       - haa_joint
       - hfe_joint
