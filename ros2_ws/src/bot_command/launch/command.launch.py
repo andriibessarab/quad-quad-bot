@@ -1,11 +1,13 @@
 import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
 
-BOT_COMMAND_PKG_NAME = 'bot_command'
-LIMB_COMMANDER_EXE_NAME = 'limb_commander'
-COMMANDER_PARAMS_FILE_NAME = 'commander_params.yaml'
+BOT_COMMAND_PKG_NAME = "bot_command"
+LIMB_COMMANDER_EXE_NAME = "limb_commander"
+COMMANDER_PARAMS_FILE_NAME = "commander_params.yaml"
+
 
 def generate_launch_description():
     pkg_bot_command = get_package_share_directory(BOT_COMMAND_PKG_NAME)
@@ -15,7 +17,7 @@ def generate_launch_description():
         package=BOT_COMMAND_PKG_NAME,
         executable=LIMB_COMMANDER_EXE_NAME,
         parameters=[config_file],
-        output="screen"
+        output="screen",
     )
 
     return LaunchDescription([limb_command_node])
