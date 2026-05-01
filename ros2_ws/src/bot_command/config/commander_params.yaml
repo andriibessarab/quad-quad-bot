@@ -1,0 +1,9 @@
+limb_controller:
+  ros__parameters:
+    action_server_name: "/joint_trajectory_controller/follow_joint_trajectory"
+    joints:  # must match names in controllers.yaml
+      - haa_joint
+      - hfe_joint
+      - knee_joint
+    default_movement_duration: 2.0
+    wait_timeout: 5.0
