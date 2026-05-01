@@ -12,6 +12,6 @@ add_executable(limb_commander src/limb_commander.cpp)
 ament_target_dependencies(limb_commander rclcpp rclcpp_action control_msgs trajectory_msgs)
 
 install(TARGETS limb_commander DESTINATION lib/${PROJECT_NAME})
-install(DIRECTORY config DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 
 ament_package()
