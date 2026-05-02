@@ -1,8 +1,12 @@
+#include "bot_kinematics/ik_solver.hpp"
+#include "bot_kinematics/types.hpp"
 #include "control_msgs/action/follow_joint_trajectory.hpp"
+#include "geometry_msgs/msg/point_stamped.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
 #include "trajectory_msgs/msg/joint_trajectory_point.hpp"
+
 #include <chrono>
 #include <functional>
 #include <memory>
@@ -12,10 +16,14 @@
 // param names
 const std::string JOINTS_PARAM_NAME = "joints";
 const std::string ACTION_SERVER_NAME_PARAM_NAME = "action_server_name";
+const std::string TARGET_TOPIC_PARAM_NAME = "target";
+
+// other consts
+const std::string TARGET_TOPIC_NAME = "target";
 
 class LimbCommander : public rclcpp::Node {
 public:
-  // alias
+  // aliases
   using FollowJointTrajectory = control_msgs::action::FollowJointTrajectory;
   using GoalHandleFollowJointTrajectory =
       rclcpp_action::ClientGoalHandle<FollowJointTrajectory>;
@@ -38,17 +46,18 @@ public:
     this->action_client_ = rclcpp_action::create_client<FollowJointTrajectory>(
         this, action_server_name_);
 
-    this->timer_ =
-        this->create_wall_timer(std::chrono::milliseconds(500),
-                                std::bind(&LimbCommander::send_goal, this)
+    // init subscription to target topic
+    target_subscriber_ =
+        this->create_subscription<geometry_msgs::msg::PointStamped>(
+            TARGET_TOPIC_NAME, 1,
+            std::bind(&LimbCommander::target_callback, this,
+                      std::placeholders::_1));
 
-        );
+    RCLCPP_INFO(this->get_logger(), "Waiting for target points...");
   }
 
+private:
   void send_goal() {
-    // cancel timer so it only fires ones
-    this->timer_->cancel();
-
     // wait for action server to turn on
     while (!action_client_->wait_for_action_server(
         std::chrono::milliseconds(1000))) {
@@ -92,6 +101,19 @@ public:
     RCLCPP_INFO(this->get_logger(), "Sending goal...");
     this->action_client_->async_send_goal(goal, send_goal_options);
     RCLCPP_INFO(this->get_logger(), "Goal sent!");
+  }
+
+  void target_callback(const geometry_msgs::msg::PointStamped::SharedPtr msg) {
+    RCLCPP_INFO(this->get_logger(),
+                "New target received: x=%.2f, y=%.2f, z=%.2f", msg->point.x,
+                msg->point.y, msg->point.z);
+
+    // Run IK
+    // auto angles = ik_solver_->calculate_ik(msg->point.x, msg->point.y,
+    // msg->point.z);
+
+    // Send the motion goal
+    // send_goal(angles);
   }
 
   void goal_response_callback(
@@ -138,10 +160,10 @@ public:
     }
   }
 
-private:
   rclcpp_action::Client<FollowJointTrajectory>::SharedPtr
       action_client_; // action client ptr
-  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr
+      target_subscriber_;
 
   // params
   std::string action_server_name_;
