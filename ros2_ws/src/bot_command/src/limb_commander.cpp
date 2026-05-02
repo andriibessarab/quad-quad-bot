@@ -17,6 +17,9 @@
 const std::string JOINTS_PARAM_NAME = "joints";
 const std::string ACTION_SERVER_NAME_PARAM_NAME = "action_server_name";
 const std::string TARGET_TOPIC_PARAM_NAME = "target";
+const std::string L1_PARAM_NAME = "l1";
+const std::string L2_PARAM_NAME = "l2";
+const std::string L3_PARAM_NAME = "l3";
 
 // other consts
 const std::string TARGET_TOPIC_NAME = "target";
@@ -31,16 +34,17 @@ public:
   LimbCommander() : Node("limb_controller") {
     RCLCPP_INFO(this->get_logger(), "Limb Commander node has started!");
 
-    // declare params
-    this->declare_parameter<std::string>(ACTION_SERVER_NAME_PARAM_NAME,
-                                         std::string{});
-    this->declare_parameter<std::vector<std::string>>(
-        JOINTS_PARAM_NAME, std::vector<std::string>{}); // joints
+    // declare and get params
+    action_server_name_ =this->declare_parameter<std::string>(ACTION_SERVER_NAME_PARAM_NAME);
+    joints_ =this->declare_parameter<std::vector<std::string>>(JOINTS_PARAM_NAME);
 
-    // get params
-    action_server_name_ =
-        this->get_parameter(ACTION_SERVER_NAME_PARAM_NAME).as_string();
-    joints_ = this->get_parameter(JOINTS_PARAM_NAME).as_string_array();
+    bot_kinematics::LimbDimensions dims;
+    dims.l1 = this->declare_parameter<double>(L1_PARAM_NAME);
+    dims.l2 = this->declare_parameter<double>(L2_PARAM_NAME);
+    dims.l3 = this->declare_parameter<double>(L3_PARAM_NAME);
+
+    // init IK solver
+    ik_solver_ = std::make_unique<bot_kinematics::IkSolver>(dims);
 
     // init action client
     this->action_client_ = rclcpp_action::create_client<FollowJointTrajectory>(
