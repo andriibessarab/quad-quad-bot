@@ -5,5 +5,6 @@ limb_controller:
       - haa_joint
       - hfe_joint
       - knee_joint
-    default_movement_duration: 2.0
-    wait_timeout: 5.0
+    l1_len: 0.05  # hip offset (m)
+    l2_len: 0.05  # femur length (m)
+    l3_len: 0.05  # tibia Length (m)

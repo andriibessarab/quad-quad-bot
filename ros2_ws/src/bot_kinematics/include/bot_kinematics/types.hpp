@@ -1,6 +1,8 @@
 #ifndef BOT_KINEMATICS_TYPES_HPP
 #define BOT_KINEMATICS_TYPES_HPP
 
+#include <vector>
+
 namespace bot_kinematics {
 
 /**
@@ -21,6 +23,11 @@ struct LimbJointAngles {
   double haa;
   double hfe;
   double kfe;
+
+  std::vector<double> to_vector() const {
+    return std::vector<double>{haa, hfe, kfe};
+    ;
+  }
 };
 } // namespace bot_kinematics
 
