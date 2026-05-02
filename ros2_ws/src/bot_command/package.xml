@@ -13,6 +13,9 @@
     <depend>rclcpp_action</depend>
     <depend>control_msgs</depend>
     <depend>trajectory_msgs</depend>
+    <depend>geometry_msgs</depend>
+
+    <depend>bot_kinematics</depend>
 
     <exec_depend>ament_index_python</exec_depend>
     <exec_depend>launch</exec_depend>
