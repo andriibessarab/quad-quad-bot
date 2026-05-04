@@ -9,29 +9,27 @@
 namespace bot_kinematics {
 IkSolver::IkSolver(const LimbDimensions &dims) : limb_dimensions_(dims) {}
 
-  LimbJointAngles IkSolver::calculate_ik(double target_x, double target_y, double target_z) {
+LimbJointAngles IkSolver::calculate_ik(double target_x, double target_y,
+                                       double target_z) {
   LimbJointAngles angles;
 
   double l1 = limb_dimensions_.l1;
   double l2 = limb_dimensions_.l2;
   double l3 = limb_dimensions_.l3;
 
-  // use derived formulas to calculate the three angles
-  // angles.haa = -(std::atan2(std::sqrt(target_y * target_y + target_z * target_z - l1 * l1), l1) + std::atan2(target_y, -target_z) - M_PI / 2);
-  // angles.kfe = std::acos((target_y * target_y + target_z * target_z - l1 * l1 + target_x * target_x - l2 * l2 - l3 * l3) / (-2 * l2 * l3));
-  // angles.hfe = std::asin((l3 * std::sin(angles.kfe)) / (std::sqrt(target_y * target_y + target_z * target_z - l1 * l1 + target_x * target_x))) + std::atan2(target_x, std::sqrt(target_y * target_y + target_z * target_z - l1 * l1));
-
   /////////////////////////// CALCULATIONS ///////////////////////////
   // planar distances
   double d_yz_sq = target_y * target_y + target_z * target_z - l1 * l1;
-  if (d_yz_sq < 0) d_yz_sq = 0; // prevent NaN
-  double d_yz = std::sqrt(d_yz_sq);  // B term from calulations
+  if (d_yz_sq < 0)
+    d_yz_sq = 0;                    // prevent NaN
+  double d_yz = std::sqrt(d_yz_sq); // B term from calulations
 
   double d_sq = d_yz_sq + target_x * target_x;
   double d = std::sqrt(d_sq);
 
   // HAA
-  angles.haa = -(std::atan2(d_yz, l1) + std::atan2(target_y, -target_z) - M_PI_2);
+  angles.haa =
+      -(std::atan2(d_yz, l1) + std::atan2(target_y, -target_z) - M_PI_2);
 
   // raw angles
   double cos_gamma = (l2 * l2 + l3 * l3 - d_sq) / (2 * l2 * l3);
