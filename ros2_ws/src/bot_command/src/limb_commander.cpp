@@ -1,8 +1,13 @@
+#include "bot_kinematics/ik_solver.hpp"
+#include "bot_kinematics/types.hpp"
 #include "control_msgs/action/follow_joint_trajectory.hpp"
+#include "geometry_msgs/msg/point_stamped.hpp"
+#include "rclcpp/exceptions.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
 #include "trajectory_msgs/msg/joint_trajectory.hpp"
 #include "trajectory_msgs/msg/joint_trajectory_point.hpp"
+
 #include <chrono>
 #include <functional>
 #include <memory>
@@ -12,10 +17,17 @@
 // param names
 const std::string JOINTS_PARAM_NAME = "joints";
 const std::string ACTION_SERVER_NAME_PARAM_NAME = "action_server_name";
+const std::string TARGET_TOPIC_PARAM_NAME = "target";
+const std::string L1_PARAM_NAME = "l1_len";
+const std::string L2_PARAM_NAME = "l2_len";
+const std::string L3_PARAM_NAME = "l3_len";
+
+// other consts
+const std::string TARGET_TOPIC_NAME = "target";
 
 class LimbCommander : public rclcpp::Node {
 public:
-  // alias
+  // aliases
   using FollowJointTrajectory = control_msgs::action::FollowJointTrajectory;
   using GoalHandleFollowJointTrajectory =
       rclcpp_action::ClientGoalHandle<FollowJointTrajectory>;
@@ -23,32 +35,46 @@ public:
   LimbCommander() : Node("limb_controller") {
     RCLCPP_INFO(this->get_logger(), "Limb Commander node has started!");
 
-    // declare params
-    this->declare_parameter<std::string>(ACTION_SERVER_NAME_PARAM_NAME,
-                                         std::string{});
-    this->declare_parameter<std::vector<std::string>>(
-        JOINTS_PARAM_NAME, std::vector<std::string>{}); // joints
+    bot_kinematics::LimbDimensions dims;
+    try {
+      // declare and get params
+      action_server_name_ =
+          this->declare_parameter<std::string>(ACTION_SERVER_NAME_PARAM_NAME);
+      joints_ =
+          this->declare_parameter<std::vector<std::string>>(JOINTS_PARAM_NAME);
 
-    // get params
-    action_server_name_ =
-        this->get_parameter(ACTION_SERVER_NAME_PARAM_NAME).as_string();
-    joints_ = this->get_parameter(JOINTS_PARAM_NAME).as_string_array();
+      // get limb dims from params
+      dims.l1 = this->declare_parameter<double>(L1_PARAM_NAME);
+      dims.l2 = this->declare_parameter<double>(L2_PARAM_NAME);
+      dims.l3 = this->declare_parameter<double>(L3_PARAM_NAME);
+    } catch (
+        const rclcpp::exceptions::UninitializedStaticallyTypedParameterException
+            &e) {
+      // not able to resolve all params
+      RCLCPP_FATAL(this->get_logger(), "MISSING CRITICAL PARAMETERS: %s",
+                   e.what());
+      throw e; // kill the node
+    }
+
+    // init IK solver
+    ik_solver_ = std::make_unique<bot_kinematics::IkSolver>(dims);
 
     // init action client
     this->action_client_ = rclcpp_action::create_client<FollowJointTrajectory>(
         this, action_server_name_);
 
-    this->timer_ =
-        this->create_wall_timer(std::chrono::milliseconds(500),
-                                std::bind(&LimbCommander::send_goal, this)
+    // init subscription to target topic
+    target_subscriber_ =
+        this->create_subscription<geometry_msgs::msg::PointStamped>(
+            TARGET_TOPIC_NAME, 1,
+            std::bind(&LimbCommander::target_callback, this,
+                      std::placeholders::_1));
 
-        );
+    RCLCPP_INFO(this->get_logger(), "Waiting for target points...");
   }
 
-  void send_goal() {
-    // cancel timer so it only fires ones
-    this->timer_->cancel();
-
+private:
+  void send_goal(bot_kinematics::LimbJointAngles joint_angles) {
     // wait for action server to turn on
     while (!action_client_->wait_for_action_server(
         std::chrono::milliseconds(1000))) {
@@ -71,7 +97,7 @@ public:
 
     // sample trajectory point
     trajectory_msgs::msg::JointTrajectoryPoint point;
-    point.positions = {0, 0, 0};
+    point.positions = joint_angles.to_vector();
     point.time_from_start = rclcpp::Duration::from_seconds(1.0);
 
     // add points for goal
@@ -92,6 +118,19 @@ public:
     RCLCPP_INFO(this->get_logger(), "Sending goal...");
     this->action_client_->async_send_goal(goal, send_goal_options);
     RCLCPP_INFO(this->get_logger(), "Goal sent!");
+  }
+
+  void target_callback(const geometry_msgs::msg::PointStamped::SharedPtr msg) {
+    RCLCPP_INFO(this->get_logger(),
+                "New target received: x=%.2f, y=%.2f, z=%.2f", msg->point.x,
+                msg->point.y, msg->point.z);
+
+    // run IK and store calculated limb joint angles
+    bot_kinematics::LimbJointAngles joint_angles =
+        ik_solver_->calculate_ik(msg->point.x, msg->point.y, msg->point.z);
+
+    // Send the motion goal
+    send_goal(joint_angles);
   }
 
   void goal_response_callback(
@@ -138,14 +177,15 @@ public:
     }
   }
 
-private:
   rclcpp_action::Client<FollowJointTrajectory>::SharedPtr
       action_client_; // action client ptr
-  rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr
+      target_subscriber_;
 
-  // params
+  // instance vars
   std::string action_server_name_;
   std::vector<std::string> joints_;
+  std::unique_ptr<bot_kinematics::IkSolver> ik_solver_;
 };
 
 int main(int argc, char **argv) {
