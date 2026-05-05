@@ -16,7 +16,7 @@ def generate_launch_description():
     limb_trajectory_generator_node = Node(
         package=BOT_GAIT_PKG_NAME,
         executable=LIMB_TRAJECTORY_GENERATOR_EXE_NAME,
-        # parameters=[config_file],
+        parameters=[config_file],
         output="screen",
     )
 
