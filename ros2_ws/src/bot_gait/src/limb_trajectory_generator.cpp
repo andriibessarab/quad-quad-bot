@@ -64,8 +64,22 @@ private:
     }
   }
 
+  /**
+   * @brief Evaluates a 1D cubic Bezier curve for swing-phase trajectory
+   * shaping.
+   *
+   * @param p0 Curve value at the start of swing.
+   * @param p1 First intermediate control value that shapes lift-off.
+   * @param p2 Second intermediate control value that shapes touch-down.
+   * @param p3 Curve value at the end of swing.
+   * @param t Normalized swing phase in the range [0, 1].
+   * @return Interpolated curve value at phase `t`.
+   */
   double bezier(double p0, double p1, double p2, double p3, double t) {
     return 0.0;
+    double inv_t = 1.0 - t;
+    return (inv_t * inv_t * inv_t * p0) + (3.0 * inv_t * inv_t * t * p1) +
+           (3.0 * inv_t * t * t * p2) + (t * t * t * p3);
   }
 
   double lerp(double start, double end, double t) { return 0.0; }
