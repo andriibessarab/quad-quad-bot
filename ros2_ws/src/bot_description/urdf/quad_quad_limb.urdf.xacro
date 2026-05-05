@@ -147,35 +147,35 @@
         <parent link="base_link" />
         <child link="shoulder_link" />
         <axis xyz="0 0 1" />
-        <limit lower="-0.5236" upper="0.5236" effort="1000.0" velocity="5.0" />
+        <limit lower="-3" upper="3" effort="1000.0" velocity="5.0" />
     </joint>
     <joint name="hfe_joint" type="revolute">
         <origin xyz="0.020875 0 0.0165" rpy="0 1.5708 0" />
         <parent link="shoulder_link" />
         <child link="femur_link" />
         <axis xyz="0 0 1" />
-        <limit lower="-1.5708" upper="1.5708" effort="1000.0" velocity="5.0" />
+        <limit lower="-3" upper="3" effort="1000.0" velocity="5.0" />
     </joint>
     <joint name="knee_joint" type="revolute">
         <origin xyz="0.046 0 0.0106" rpy="-3.1416 0 1.5708" />
         <parent link="femur_link" />
         <child link="tibia_link" />
         <axis xyz="0 0 1" />
-        <limit lower="-0.87267" upper="0.87267" effort="1000.0" velocity="5.0" />
+        <limit lower="-3" upper="3" effort="1000.0" velocity="5.0" />
     </joint>
     <joint name="kfe_motor_joint" type="revolute">
         <origin xyz="0.002 0 0.0132" rpy="-3.1416 0 -1.5708" />
         <parent link="femur_link" />
         <child link="tab_link" />
         <axis xyz="0 0 -1" />
-        <limit lower="-0.87267" upper="0.87267" effort="1000.0" velocity="5.0" />
+        <limit lower="-3" upper="3" effort="1000.0" velocity="5.0" />
     </joint>
     <joint name="rod_joint" type="revolute">
         <origin xyz="0.015 0 0.0045" rpy="0 0 -1.5708" />
         <parent link="tab_link" />
         <child link="rod_link" />
         <axis xyz="0 0 -1" />
-        <limit lower="-0.87267" upper="0.87267" effort="1000.0" velocity="5.0" />
+        <limit lower="-3" upper="3" effort="1000.0" velocity="5.0" />
     </joint>
 
     <ros2_control name="GazeboSystem" type="system">
@@ -185,8 +185,8 @@
 
         <joint name="haa_joint">
             <command_interface name="position">
-                <param name="min">-0.5236</param>
-                <param name="max">0.5236</param>
+                <param name="min">-3</param>
+                <param name="max">3</param>
             </command_interface>
             <state_interface name="position">
                 <param name="initial_value">0.0</param>
@@ -197,8 +197,8 @@
 
         <joint name="hfe_joint">
             <command_interface name="position">
-                <param name="min">-1.5708</param>
-                <param name="max">1.5708</param>
+                <param name="min">-3</param>
+                <param name="max">3</param>
             </command_interface>
             <state_interface name="position">
                 <param name="initial_value">0.0</param>
@@ -209,8 +209,8 @@
 
         <joint name="knee_joint">
             <command_interface name="position">
-                <param name="min">-0.87267</param>
-                <param name="max">0.87267</param>
+                <param name="min">-3</param>
+                <param name="max">3</param>
             </command_interface>
             <state_interface name="position">
                 <param name="initial_value">0.0</param>
