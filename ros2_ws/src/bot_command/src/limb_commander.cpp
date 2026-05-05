@@ -1,7 +1,7 @@
 #include "bot_kinematics/ik_solver.hpp"
 #include "bot_kinematics/types.hpp"
 #include "control_msgs/action/follow_joint_trajectory.hpp"
-#include "geometry_msgs/msg/point_stamped.hpp"
+#include "geometry_msgs/msg/point.hpp"
 #include "rclcpp/exceptions.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
@@ -67,7 +67,7 @@ public:
 
     // init subscription to target topic
     target_subscriber_ =
-        this->create_subscription<geometry_msgs::msg::PointStamped>(
+        this->create_subscription<geometry_msgs::msg::Point>(
             TARGET_TOPIC_NAME, 1,
             std::bind(&LimbCommander::target_callback, this,
                       std::placeholders::_1));
@@ -122,14 +122,18 @@ private:
     RCLCPP_INFO(this->get_logger(), "Goal sent!");
   }
 
-  void target_callback(const geometry_msgs::msg::PointStamped::SharedPtr msg) {
+  void target_callback(const geometry_msgs::msg::Point::SharedPtr msg) {
+	// extract cart coords from msg
+	double x = msg->x;
+	double y = msg->y;
+	double z = msg->z;
+
     RCLCPP_INFO(this->get_logger(),
-                "New target received: x=%.2f, y=%.2f, z=%.2f", msg->point.x,
-                msg->point.y, msg->point.z);
+                "New target received: x=%.2f, y=%.2f, z=%.2f", x, y, z);
 
     // run IK and store calculated limb joint angles
     bot_kinematics::LimbJointAngles joint_angles =
-        ik_solver_->calculate_ik(msg->point.x, msg->point.y, msg->point.z);
+        ik_solver_->calculate_ik(x, y, z);
 
     // Send the motion goal
     send_goal(joint_angles);
@@ -181,7 +185,7 @@ private:
 
   rclcpp_action::Client<FollowJointTrajectory>::SharedPtr
       action_client_; // action client ptr
-  rclcpp::Subscription<geometry_msgs::msg::PointStamped>::SharedPtr
+  rclcpp::Subscription<geometry_msgs::msg::Point>::SharedPtr
       target_subscriber_;
 
   // instance vars
