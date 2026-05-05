@@ -45,7 +45,7 @@ public:
 
     /////////temp//////////
     this->phase_start_time_ = this->now(); // start phaze on launch
-    this->leg_state_ = SWING;
+    this->leg_state_ = STAND;
     ///////////////////////
 
     // run control loop at set hz
@@ -59,12 +59,23 @@ private:
   void control_loop() {
     // leg standing - return home coordinate
     if (leg_state_ == STAND) {
+      geometry_msgs::msg::Point msg;
+      msg.x = -0.012;
+      msg.y = 0.02088;
+      msg.z = -0.078;
+
+      target_publisher_->publish(msg);
+
+      double elapsed = (this->now() - this->phase_start_time_).seconds();
+      if (elapsed >= 5.0) {
+        this->leg_state_ = SWING;
+        this->phase_start_time_ = this->now();
+      }
       return;
     }
 
     // calculate time elapsed since phase start
     double elapsed = (this->now() - this->phase_start_time_).seconds();
-    double t; // phase
 
     geometry_msgs::msg::Point msg;
 
@@ -74,21 +85,45 @@ private:
     case SWING: {
       // run bezier curve math
       double t = elapsed / this->swing_duration_;
-      if (t > 1.0) {
-        t = 0;
+      if (t >= 1.0) {
+        msg.x = 0.024;
+        msg.y = 0.02088;
+        msg.z = -0.078;
+        target_publisher_->publish(msg);
+
         this->leg_state_ = STANCE;
         this->phase_start_time_ = this->now();
+
+        return;
       }
 
       // calculate cooridnates
-      msg.x = bezier(-0.012, -0.008, 0.008, 0.012, t);
+      msg.x = bezier(-0.012, -0.012, 0.024, 0.024, t);
       msg.y = 0.02088;
-      msg.z = bezier(-0.078, -0.066, -0.066, -0.078, t);
+      msg.z = bezier(-0.078, -0.046, -0.046, -0.078, t);
 
       break;
     }
-    case STANCE: // run lerp math
+    case STANCE: {
+      double t = elapsed / this->stance_duration_;
+      if (t >= 1.0) {
+        msg.x = -0.012;
+        msg.y = 0.02088;
+        msg.z = -0.078;
+        target_publisher_->publish(msg);
+
+        this->leg_state_ = SWING;
+        this->phase_start_time_ = this->now();
+        return;
+      }
+
+      double s = t * t * (3.0 - 2.0 * t); // smoothstep
+
+      msg.x = lerp(0.024, -0.012, s);
+      msg.y = 0.02088;
+      msg.z = -0.078;
       break;
+    }
 
     default:
       break;
@@ -115,7 +150,9 @@ private:
            (3.0 * inv_t * t * t * p2) + (t * t * t * p3);
   }
 
-  double lerp(double start, double end, double t) { return 0.0; }
+  double lerp(double start, double end, double t) {
+    return start + t * (end - start);
+  }
 
   // instance vars
   rclcpp::TimerBase::SharedPtr timer_;
