@@ -1,4 +1,6 @@
+#include "geometry_msgs/msg/point.hpp"
 #include "rclcpp/exceptions.hpp"
+#include "rclcpp/publisher.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/time.hpp"
 #include "rclcpp/timer.hpp"
@@ -37,6 +39,10 @@ public:
       throw e; // kill the node
     }
 
+    // setup target publisher
+    target_publisher_ =
+        this->create_publisher<geometry_msgs::msg::Point>(TARGET_TOPIC_NAME, 1);
+
     /////////temp//////////
     this->phase_start_time_ = this->now(); // start phaze on launch
     this->leg_state_ = SWING;
@@ -51,17 +57,45 @@ public:
 
 private:
   void control_loop() {
-    switch (this->leg_state_) {
-    case SWING: // run bezier curve math
-      break;
+    // leg standing - return home coordinate
+    if (leg_state_ == STAND) {
+      return;
+    }
 
+    // calculate time elapsed since phase start
+    double elapsed = (this->now() - this->phase_start_time_).seconds();
+    double t; // phase
+
+    geometry_msgs::msg::Point msg;
+
+    // find cartesian point at specific phase on appropriate curve for specified
+    // state
+    switch (this->leg_state_) {
+    case SWING: {
+      // run bezier curve math
+      double t = elapsed / this->swing_duration_;
+      if (t > 1.0) {
+        t = 0;
+        this->leg_state_ = STANCE;
+        this->phase_start_time_ = this->now();
+      }
+
+      // calculate cooridnates
+      msg.x = bezier(-0.012, -0.008, 0.008, 0.012, t);
+      msg.y = 0.02088;
+      msg.z = bezier(-0.078, -0.066, -0.066, -0.078, t);
+
+      break;
+    }
     case STANCE: // run lerp math
       break;
 
-    case STAND: // return default standing position
     default:
       break;
     }
+
+    // publish calculated point
+    target_publisher_->publish(msg);
   }
 
   /**
@@ -76,7 +110,6 @@ private:
    * @return Interpolated curve value at phase `t`.
    */
   double bezier(double p0, double p1, double p2, double p3, double t) {
-    return 0.0;
     double inv_t = 1.0 - t;
     return (inv_t * inv_t * inv_t * p0) + (3.0 * inv_t * inv_t * t * p1) +
            (3.0 * inv_t * t * t * p2) + (t * t * t * p3);
@@ -88,6 +121,7 @@ private:
   rclcpp::TimerBase::SharedPtr timer_;
   rclcpp::Time phase_start_time_;
   enum LegState { STAND, SWING, STANCE } leg_state_ = STAND;
+  rclcpp::Publisher<geometry_msgs::msg::Point>::SharedPtr target_publisher_;
 
   // params
   double control_loop_frequency_;
