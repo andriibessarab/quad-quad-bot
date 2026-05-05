@@ -24,7 +24,8 @@ const std::string L2_PARAM_NAME = "l2_len";
 const std::string L3_PARAM_NAME = "l3_len";
 
 // other consts
-const std::string TARGET_TOPIC_NAME = "target";
+const std::string TARGET_TOPIC_NAME =
+    "target"; // must match in limb_trajectory_generator.cpp
 
 class LimbCommander : public rclcpp::Node {
 public:

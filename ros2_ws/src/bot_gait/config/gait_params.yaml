@@ -1,2 +1,5 @@
 limb_trajectory_generator:
   ros__parameters:
+    control_loop_frequency: 100.0  #Hz
+    swing_duration: 0.25  # sec
+    stance_duration: 0.25  # sec

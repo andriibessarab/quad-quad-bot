@@ -8,11 +8,14 @@
 #include <string>
 
 namespace bot_gait {
+// param names
 const std::string CONTROL_LOOP_FREQUENCY_PARAM_NAME("control_loop_frequency");
 const std::string SWING_DURATION_PARAM_NAME("swing_duration");
 const std::string STANCE_DURATION_PARAM_NAME("stance_duration");
+
+// other consts
 const std::string
-    TARGET_TOPIC_PARAM_NAME("target"); // where targets are published
+    TARGET_TOPIC_NAME("target"); // must match in limb_commander.cpp
 
 class LimbTrajectoryGenerator : public rclcpp::Node {
 public:
@@ -20,13 +23,11 @@ public:
     // get params
     try {
       control_loop_frequency_ =
-          this->declare_parameter<int>(CONTROL_LOOP_FREQUENCY_PARAM_NAME);
+          this->declare_parameter<double>(CONTROL_LOOP_FREQUENCY_PARAM_NAME);
       swing_duration_ =
           this->declare_parameter<double>(SWING_DURATION_PARAM_NAME);
       stance_duration_ =
           this->declare_parameter<double>(STANCE_DURATION_PARAM_NAME);
-      target_topic_ =
-          this->declare_parameter<std::string>(TARGET_TOPIC_PARAM_NAME);
     } catch (
         const rclcpp::exceptions::UninitializedStaticallyTypedParameterException
             &e) {
@@ -43,7 +44,8 @@ public:
 
     // run control loop at set hz
     this->timer_ = this->create_wall_timer(
-        std::chrono::milliseconds(1000 / control_loop_frequency_),
+        std::chrono::duration<double, std::milli>(1000 /
+                                                  control_loop_frequency_),
         std::bind(&LimbTrajectoryGenerator::control_loop, this));
   }
 
@@ -74,7 +76,7 @@ private:
   enum LegState { STAND, SWING, STANCE } leg_state_ = STAND;
 
   // params
-  int control_loop_frequency_;
+  double control_loop_frequency_;
   double swing_duration_;
   double stance_duration_;
   std::string target_topic_;
