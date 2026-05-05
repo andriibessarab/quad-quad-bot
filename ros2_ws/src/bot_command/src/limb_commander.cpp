@@ -73,9 +73,6 @@ private:
     double y = msg->y;
     double z = msg->z;
 
-    RCLCPP_INFO(this->get_logger(),
-                "New target received: x=%.2f, y=%.2f, z=%.2f", x, y, z);
-
     // run IK and store calculated limb joint angles
     bot_kinematics::LimbJointAngles joint_angles =
         ik_solver_->calculate_ik(x, y, z);
@@ -86,12 +83,9 @@ private:
 
     trajectory_msgs::msg::JointTrajectoryPoint point;
     point.positions = joint_angles.to_vector();
-    point.time_from_start = rclcpp::Duration::from_seconds(0.02);
+    point.time_from_start = rclcpp::Duration::from_seconds(0.01);
 
     cmd.points.push_back(point);
-    joint_command_publisher_->publish(cmd);
-
-    // publish cmd
     joint_command_publisher_->publish(cmd);
   }
 
