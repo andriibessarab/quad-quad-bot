@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 
+namespace bot_command {
 // param names
 const std::string JOINTS_PARAM_NAME = "joints";
 const std::string ACTION_SERVER_NAME_PARAM_NAME = "action_server_name";
@@ -187,10 +188,11 @@ private:
   std::vector<std::string> joints_;
   std::unique_ptr<bot_kinematics::IkSolver> ik_solver_;
 };
+} // namespace bot_command
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<LimbCommander>();
+  auto node = std::make_shared<bot_command::LimbCommander>();
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;
