@@ -57,79 +57,62 @@ public:
 
 private:
   void control_loop() {
-    // leg standing - return home coordinate
-    if (leg_state_ == STAND) {
-      geometry_msgs::msg::Point msg;
-      msg.x = -0.012;
-      msg.y = 0.02088;
-      msg.z = -0.078;
+    auto now = this->now();
+    double elapsed = (now - phase_start_time_).seconds();
 
-      target_publisher_->publish(msg);
+    // determine current duration and check for state transitions
+    double current_duration =
+        (leg_state_ == SWING) ? swing_duration_ : stance_duration_;
+    if (leg_state_ == STAND)
+      current_duration = 5.0;
 
-      double elapsed = (this->now() - this->phase_start_time_).seconds();
-      if (elapsed >= 5.0) {
-        this->leg_state_ = SWING;
-        this->phase_start_time_ = this->now();
+    // check if need to transition to next stage
+    if (elapsed >= current_duration) {
+      if (leg_state_ == STAND || leg_state_ == STANCE) {
+        leg_state_ = SWING;
+      } else {
+        leg_state_ = STANCE;
       }
-      return;
+
+      // reset for the new phase
+      phase_start_time_ = now;
+      elapsed = 0.0;
+      current_duration =
+          (leg_state_ == SWING) ? swing_duration_ : stance_duration_;
     }
 
-    // calculate time elapsed since phase start
-    double elapsed = (this->now() - this->phase_start_time_).seconds();
-
+    // calculate phase [0.0, 1.0]
+    double t = elapsed / current_duration;
     geometry_msgs::msg::Point msg;
+    msg.y = 0.02088; // keep Y constant everywhere for now
 
-    // find cartesian point at specific phase on appropriate curve for specified
-    // state
+    /////////temp//////////
+    const double x_home = -0.012;
+    const double x_fwd = 0.024;
+    const double z_floor = -0.078;
+    const double z_peak = -0.046;
+    ///////////////////////
+
     switch (this->leg_state_) {
-    case SWING: {
-      // run bezier curve math
-      double t = elapsed / this->swing_duration_;
-      if (t >= 1.0) {
-        msg.x = 0.024;
-        msg.y = 0.02088;
-        msg.z = -0.078;
-        target_publisher_->publish(msg);
-
-        this->leg_state_ = STANCE;
-        this->phase_start_time_ = this->now();
-
-        return;
-      }
-
-      // calculate cooridnates
-      msg.x = bezier(-0.012, -0.012, 0.024, 0.024, t);
-      msg.y = 0.02088;
-      msg.z = bezier(-0.078, -0.046, -0.046, -0.078, t);
-
+    case STAND:
+      msg.x = x_home;
+      msg.z = z_floor;
       break;
-    }
-    case STANCE: {
-      double t = elapsed / this->stance_duration_;
-      if (t >= 1.0) {
-        msg.x = -0.012;
-        msg.y = 0.02088;
-        msg.z = -0.078;
-        target_publisher_->publish(msg);
 
-        this->leg_state_ = SWING;
-        this->phase_start_time_ = this->now();
-        return;
-      }
+    case SWING:
+      // get points on bezier curves for current state
+      msg.x = bezier(x_home, x_home, x_fwd, x_fwd, t);
+      msg.z = bezier(z_floor, z_peak, z_peak, z_floor, t);
+      break;
 
-      double s = t * t * (3.0 - 2.0 * t); // smoothstep
-
-      msg.x = lerp(0.024, -0.012, s);
-      msg.y = 0.02088;
-      msg.z = -0.078;
+    case STANCE:
+      double s = t * t * (3.0 - 2.0 * t); // smoothstep for traction
+      msg.x = lerp(x_fwd, x_home, s);     // position in horiz. line using lerp
+      msg.z = z_floor;
       break;
     }
 
-    default:
-      break;
-    }
-
-    // publish calculated point
+    // publish point (for commander)
     target_publisher_->publish(msg);
   }
 
