@@ -62,7 +62,7 @@ def generate_launch_description():
     load_jtc = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_trajectory_controller"],
+        arguments=["joint_group_position_controller"],
     )
 
     # Bridge the clock so ROS 2 and Gazebo stay in sync

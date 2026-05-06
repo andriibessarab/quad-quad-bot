@@ -1,10 +1,10 @@
 #include "bot_kinematics/ik_solver.hpp"
 #include "geometry_msgs/msg/point.hpp"
 #include "rclcpp/exceptions.hpp"
+#include "rclcpp/publisher.hpp"
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp/subscription.hpp"
-#include "trajectory_msgs/msg/joint_trajectory.hpp"
-#include "trajectory_msgs/msg/joint_trajectory_point.hpp"
+#include "std_msgs/msg/float64_multi_array.hpp"
 
 #include <chrono>
 #include <functional>
@@ -20,15 +20,16 @@ const std::string L1_PARAM_NAME = "l1_len";
 const std::string L2_PARAM_NAME = "l2_len";
 const std::string L3_PARAM_NAME = "l3_len";
 
-// other consts
+// topic names
 const std::string TARGET_TOPIC_NAME =
     "target"; // must match in limb_trajectory_generator.cpp
+const std::string JOINT_COMMAND_TOPIC =
+    "joint_group_position_controller/commands"; //  comes from
+                                                //  bot_control/controllers.yaml
 
 class LimbCommander : public rclcpp::Node {
 public:
-  LimbCommander() : Node("limb_controller") {
-    RCLCPP_INFO(this->get_logger(), "Limb Commander node has started!");
-
+  LimbCommander() : Node("limb_commander") {
     bot_kinematics::LimbDimensions dims;
 
     // declare and get params
@@ -58,12 +59,12 @@ public:
         std::bind(&LimbCommander::target_callback, this,
                   std::placeholders::_1));
 
-    // init publisher of joint trajectories (to controller)
+    // init publisher of joint angles (to controller)
     joint_command_publisher_ =
-        this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
-            "/joint_trajectory_controller/joint_trajectory", 1);
+        this->create_publisher<std_msgs::msg::Float64MultiArray>(
+            JOINT_COMMAND_TOPIC, 1);
 
-    RCLCPP_INFO(this->get_logger(), "Waiting for target points...");
+    RCLCPP_INFO(this->get_logger(), "limb_commander node initialized.");
   }
 
 private:
@@ -78,22 +79,18 @@ private:
         ik_solver_->calculate_ik(x, y, z);
 
     // build cmd
-    trajectory_msgs::msg::JointTrajectory cmd;
-    cmd.joint_names = joints_;
+    std_msgs::msg::Float64MultiArray cmd;
+    cmd.data = joint_angles.to_vector();
 
-    trajectory_msgs::msg::JointTrajectoryPoint point;
-    point.positions = joint_angles.to_vector();
-    point.time_from_start = rclcpp::Duration::from_seconds(0.01);
-
-    cmd.points.push_back(point);
+    // publish command (for controller)
     joint_command_publisher_->publish(cmd);
   }
 
   // subscriber for cartesian point targets (from gait planner)
   rclcpp::Subscription<geometry_msgs::msg::Point>::SharedPtr target_subscriber_;
 
-  // publisher of joint trajectory (to controller)
-  rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr
+  // publisher of joint angles (to controller)
+  rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr
       joint_command_publisher_;
 
   // vector with joint names
