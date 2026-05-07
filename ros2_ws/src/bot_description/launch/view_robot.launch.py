@@ -13,6 +13,7 @@ RVIZCONFIG_ARG_NAME = "rvizconfig"
 DEFAULT_MODEL_FILE_NAME = "robot.urdf.xacro"
 DEFAULT_RVIZCONFIG_FILE_NAME = "robot.rviz"
 
+
 def generate_launch_description():
     # file paths
     pkg_share = get_package_share_directory(BOT_DESCRIPTION_PKG_NAME)
@@ -43,6 +44,11 @@ def generate_launch_description():
         output="screen",
         parameters=[{"robot_description": robot_description}],
     )
+    joint_state_publisher_node = Node(
+        package="joint_state_publisher",
+        executable="joint_state_publisher",
+        output="screen",
+    )
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
@@ -56,6 +62,7 @@ def generate_launch_description():
             model_arg,
             rviz_arg,
             robot_state_publisher_node,
+            joint_state_publisher_node,
             rviz_node,
         ]
     )
