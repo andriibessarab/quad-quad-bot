@@ -5,8 +5,8 @@
     <xacro:property name="limits"
                     value="${xacro.load_yaml('$(find bot_description)/config/joint_limits.yaml')}"/>
 
-    <!-- Limb macro definition -->
-    <xacro:macro name="limb" params="prefix mult">
+    <!-- Internal limb geometry + internal joints (hfe/kfe). -->
+    <xacro:macro name="_limb_core" params="prefix mult">
         <!-- Links -->
         <link name="${prefix}shoulder_link">
             <inertial>
@@ -137,6 +137,21 @@
                    upper="${limits['kfe']['upper']}"
                    effort="${limits['kfe']['effort']}"
                    velocity="${limits['kfe']['velocity']}"/>
+        </joint>
+    </xacro:macro>
+
+    <!-- Public limb macro: owns full attachment to body, hiding internal limb construction. -->
+    <xacro:macro name="limb" params="prefix x y z r p yw mult parent_link:=body_link">
+        <xacro:_limb_core prefix="${prefix}_" mult="${mult}"/>
+        <joint name="${prefix}_haa_joint" type="revolute">
+            <parent link="${parent_link}"/>
+            <child link="${prefix}_shoulder_link"/>
+            <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} ${yw}"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="${limits['haa']['lower']}"
+                   upper="${limits['haa']['upper']}"
+                   effort="${limits['haa']['effort']}"
+                   velocity="${limits['haa']['velocity']}"/>
         </joint>
     </xacro:macro>
 </robot>

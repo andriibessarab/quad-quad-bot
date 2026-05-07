@@ -8,35 +8,16 @@
     <xacro:property name="leg_pitch" value="1.5708"/>
     <xacro:property name="leg_roll_flip" value="3.1416"/>
 
-    <!-- Joint limits loaded from YAML -->
-    <xacro:property name="limits"
-                    value="${xacro.load_yaml('$(find bot_description)/config/joint_limits.yaml')}"/>
-
     <!-- Parts from other files -->
     <xacro:include filename="$(find bot_description)/urdf/body.urdf.xacro"/>
     <xacro:include filename="$(find bot_description)/urdf/limb.urdf.xacro"/>
 
-    <!-- Macro that adds a limb and joints it to body -->
-    <xacro:macro name="add_limb" params="prefix x y z r p yw mult">
-        <xacro:limb prefix="${prefix}_" mult="${mult}"/>
-        <joint name="${prefix}_haa_joint" type="revolute">
-            <parent link="body_link"/>
-            <child link="${prefix}_shoulder_link"/>
-            <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} ${yw}"/>
-            <axis xyz="0 0 1"/>
-            <limit lower="${limits['haa']['lower']}"
-                   upper="${limits['haa']['upper']}"
-                   effort="${limits['haa']['effort']}"
-                   velocity="${limits['haa']['velocity']}"/>
-        </joint>
-    </xacro:macro>
-
     <!-- Call macros -->
     <xacro:body/>
-    <xacro:add_limb prefix="fr" x="${leg_x}" y="${leg_y}" z="${-leg_z}" r="0" p="${leg_pitch}" yw="0" mult="1"/>
-    <xacro:add_limb prefix="fl" x="${leg_x}" y="${leg_y}" z="${leg_z}" r="${leg_roll_flip}" p="${-leg_pitch}" yw="0"
-                    mult="-1"/>
-    <xacro:add_limb prefix="br" x="${-leg_x}" y="${leg_y}" z="${-leg_z}" r="${leg_roll_flip}" p="${leg_pitch}" yw="0"
-                    mult="-1"/>
-    <xacro:add_limb prefix="bl" x="${-leg_x}" y="${leg_y}" z="${leg_z}" r="0" p="${-leg_pitch}" yw="0" mult="1"/>
+    <xacro:limb prefix="fr" x="${leg_x}" y="${leg_y}" z="${-leg_z}" r="0" p="${leg_pitch}" yw="0" mult="1"/>
+    <xacro:limb prefix="fl" x="${leg_x}" y="${leg_y}" z="${leg_z}" r="${leg_roll_flip}" p="${-leg_pitch}" yw="0"
+                mult="-1"/>
+    <xacro:limb prefix="br" x="${-leg_x}" y="${leg_y}" z="${-leg_z}" r="${leg_roll_flip}" p="${leg_pitch}" yw="0"
+                mult="-1"/>
+    <xacro:limb prefix="bl" x="${-leg_x}" y="${leg_y}" z="${leg_z}" r="0" p="${-leg_pitch}" yw="0" mult="1"/>
 </robot>
