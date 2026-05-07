@@ -1,4 +1,4 @@
-limb_controller:
+locomotion_commander:
   ros__parameters:
     action_server_name: "/joint_trajectory_controller/follow_joint_trajectory"
     joints:  # must match names in controllers.yaml

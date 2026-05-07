@@ -27,9 +27,9 @@ const std::string JOINT_COMMAND_TOPIC =
     "joint_group_position_controller/commands"; //  comes from
                                                 //  bot_control/controllers.yaml
 
-class LimbCommander : public rclcpp::Node {
+class LocomotionCommander : public rclcpp::Node {
 public:
-  LimbCommander() : Node("limb_commander") {
+  LocomotionCommander() : Node("locomotion_commander") {
     bot_kinematics::LimbDimensions dims;
 
     // declare and get params
@@ -56,7 +56,7 @@ public:
     // init subscription to target topic (reciving cartesian points)
     target_subscriber_ = this->create_subscription<geometry_msgs::msg::Point>(
         TARGET_TOPIC_NAME, 1,
-        std::bind(&LimbCommander::target_callback, this,
+        std::bind(&LocomotionCommander::target_callback, this,
                   std::placeholders::_1));
 
     // init publisher of joint angles (to controller)
@@ -64,7 +64,7 @@ public:
         this->create_publisher<std_msgs::msg::Float64MultiArray>(
             JOINT_COMMAND_TOPIC, 1);
 
-    RCLCPP_INFO(this->get_logger(), "limb_commander node initialized.");
+    RCLCPP_INFO(this->get_logger(), "locomotion_commander node initialized.");
   }
 
 private:
@@ -103,7 +103,7 @@ private:
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<bot_command::LimbCommander>();
+  auto node = std::make_shared<bot_command::LocomotionCommander>();
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

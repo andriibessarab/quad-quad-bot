@@ -8,12 +8,12 @@ find_package(geometry_msgs REQUIRED)
 
 find_package(bot_kinematics REQUIRED)
 
-add_executable(limb_commander src/limb_commander.cpp)
+add_executable(locomotion_commander src/locomotion_commander.cpp)
 
-ament_target_dependencies(limb_commander rclcpp std_msgs geometry_msgs
+ament_target_dependencies(locomotion_commander rclcpp std_msgs geometry_msgs
                           bot_kinematics)
 
-install(TARGETS limb_commander DESTINATION lib/${PROJECT_NAME})
+install(TARGETS locomotion_commander DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY config launch DESTINATION share/${PROJECT_NAME})
 
 ament_package()
