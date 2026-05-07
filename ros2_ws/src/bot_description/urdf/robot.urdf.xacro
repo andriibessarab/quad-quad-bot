@@ -1,17 +1,25 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="quad_quad_bot">
 
+    <!-- Parts from other files -->
     <xacro:include filename="$(find bot_description)/urdf/body.urdf.xacro"/>
     <xacro:include filename="$(find bot_description)/urdf/limb.urdf.xacro"/>
 
-    <xacro:body/>
-    <xacro:limb prefix="fl_"/>
+    <!-- Macro that adds a limb and joints it to body -->
+    <xacro:macro name="add_limb" params="prefix x y z r p yw">
+        <xacro:limb prefix="${prefix}_"/>
+        <joint name="${prefix}_haa_joint" type="revolute">
+            <parent link="body_link"/>
+            <child link="${prefix}_shoulder_link"/>
+            <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} ${yw}"/>
+            <axis xyz="0 0 1"/>
+            <limit lower="-3.14" upper="3.14" effort="1000" velocity="5"/>
+        </joint>
+    </xacro:macro>
 
-    <joint name="fl_haa_joint" type="revolute">
-        <parent link="body_link"/>
-        <child link="fl_shoulder_link"/>
-        <origin xyz="0.0765 -0.009 -0.0338" rpy="0 1.5708 0"/>
-        <axis xyz="0 0 1"/>
-        <limit lower="0" upper="0" effort="0" velocity="0"/>
-    </joint>
+    <xacro:body/>
+    <xacro:add_limb prefix="fl" x="0.0765"  y="-0.009" z="-0.0338" r="0" p="1.5708"  yw="0"/>
+<!--    <xacro:add_limb prefix="fr" x="0.0765"  y="-0.009" z="0.0338"  r="0" p="1.5708"  yw="0"/>-->
+<!--    <xacro:add_limb prefix="bl" x="-0.0765" y="-0.009" z="-0.0338" r="0" p="-1.5708" yw="0"/>-->
+    <xacro:add_limb prefix="br" x="-0.0765" y="-0.009" z="0.0338"  r="0" p="-1.5708" yw="0"/>
 </robot>
