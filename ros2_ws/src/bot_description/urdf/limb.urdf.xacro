@@ -2,130 +2,130 @@
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="limb">
     <xacro:macro name="limb" params="prefix">
-    <!-- Links -->
-    <link name="${prefix}shoulder_link">
-        <inertial>
-            <origin xyz="0.018766 0.016329 0.0079907" rpy="0 0 0"/>
-            <mass value="0.01481"/>
-            <inertia ixx="1.3996E-06" ixy="-1.6833E-08" ixz="-7.906E-10" iyy="1.8819E-06" iyz="-3.0123E-10"
-                     izz="2.5913E-06"/>
-        </inertial>
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://bot_description/meshes/haa_horn.STL" scale="1 1 1"/>
-            </geometry>
-        </visual>
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://bot_description/meshes/shoulder_casing.STL" scale="1 1 1"/>
-            </geometry>
-        </visual>
-        <visual>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://bot_description/meshes/hfe_servo.STL" scale="1 1 1"/>
-            </geometry>
-        </visual>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://bot_description/meshes/haa_horn.STL" scale="1 1 1"/>
-            </geometry>
-        </collision>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://bot_description/meshes/shoulder_casing.STL" scale="1 1 1"/>
-            </geometry>
-        </collision>
-        <collision>
-            <origin xyz="0 0 0" rpy="0 0 0"/>
-            <geometry>
-                <mesh filename="package://bot_description/meshes/hfe_servo.STL" scale="1 1 1"/>
-            </geometry>
-        </collision>
-    </link>
-<!--    <link name="femur_link">-->
-<!--        <inertial>-->
-<!--            <origin xyz="0.012387 -0.00071898 0.017314" rpy="0 0 0"/>-->
-<!--            <mass value="0.015915"/>-->
-<!--            <inertia ixx="9.3139E-07" ixy="-7.9194E-10" ixz="-9.4792E-08" iyy="3.7356E-06" iyz="1.3143E-09"-->
-<!--                     izz="3.3585E-06"/>-->
-<!--        </inertial>-->
-<!--        <visual>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <mesh filename="package://bot_description/meshes/hfe_horn.STL" scale="1 1 1"/>-->
-<!--            </geometry>-->
-<!--        </visual>-->
-<!--        <visual>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <mesh filename="package://bot_description/meshes/femur.STL" scale="1 1 1"/>-->
-<!--            </geometry>-->
-<!--        </visual>-->
-<!--        <visual>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <mesh filename="package://bot_description/meshes/kfe_servo.STL" scale="1 1 1"/>-->
-<!--            </geometry>-->
-<!--        </visual>-->
-<!--        <collision>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <mesh filename="package://bot_description/meshes/hfe_horn.STL" scale="1 1 1"/>-->
-<!--            </geometry>-->
-<!--        </collision>-->
-<!--        <collision>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <mesh filename="package://bot_description/meshes/femur.STL" scale="1 1 1"/>-->
-<!--            </geometry>-->
-<!--        </collision>-->
-<!--        <collision>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <mesh filename="package://bot_description/meshes/kfe_servo.STL" scale="1 1 1"/>-->
-<!--            </geometry>-->
-<!--        </collision>-->
-<!--    </link>-->
-<!--    <link name="tibia_link">-->
-<!--        <inertial>-->
-<!--            <origin xyz="0.0019117 0.036934 -0.0058072" rpy="0 0 0"/>-->
-<!--            <mass value="0.052333"/>-->
-<!--            <inertia ixx="3.6178E-05" ixy="3.873E-06" ixz="-6.0786E-07" iyy="2.0314E-05" iyz="6.2224E-06"-->
-<!--                     izz="2.4513E-05"/>-->
-<!--        </inertial>-->
-<!--        <visual>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <mesh filename="package://bot_description/meshes/tibia.STL" scale="1 1 1"/>-->
-<!--            </geometry>-->
-<!--        </visual>-->
-<!--        <collision>-->
-<!--            <origin xyz="0 0 0" rpy="0 0 0"/>-->
-<!--            <geometry>-->
-<!--                <mesh filename="package://bot_description/meshes/tibia.STL" scale="1 1 1"/>-->
-<!--            </geometry>-->
-<!--        </collision>-->
-<!--    </link>-->
+        <!-- Links -->
+        <link name="${prefix}shoulder_link">
+            <inertial>
+                <origin xyz="0.018766 0.016329 0.0079907" rpy="0 0 0"/>
+                <mass value="0.01481"/>
+                <inertia ixx="1.3996E-06" ixy="-1.6833E-08" ixz="-7.906E-10" iyy="1.8819E-06" iyz="-3.0123E-10"
+                         izz="2.5913E-06"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/haa_horn.STL" scale="1 1 1"/>
+                </geometry>
+            </visual>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/shoulder_casing.STL" scale="1 1 1"/>
+                </geometry>
+            </visual>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/hfe_servo.STL" scale="1 1 1"/>
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/haa_horn.STL" scale="1 1 1"/>
+                </geometry>
+            </collision>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/shoulder_casing.STL" scale="1 1 1"/>
+                </geometry>
+            </collision>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/hfe_servo.STL" scale="1 1 1"/>
+                </geometry>
+            </collision>
+        </link>
+        <link name="${prefix}femur_link">
+            <inertial>
+                <origin xyz="0.012387 -0.00071898 0.017314" rpy="0 0 0"/>
+                <mass value="0.015915"/>
+                <inertia ixx="9.3139E-07" ixy="-7.9194E-10" ixz="-9.4792E-08" iyy="3.7356E-06" iyz="1.3143E-09"
+                         izz="3.3585E-06"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/hfe_horn.STL" scale="1 1 1"/>
+                </geometry>
+            </visual>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/femur.STL" scale="1 1 1"/>
+                </geometry>
+            </visual>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/kfe_servo.STL" scale="1 1 1"/>
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/hfe_horn.STL" scale="1 1 1"/>
+                </geometry>
+            </collision>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/femur.STL" scale="1 1 1"/>
+                </geometry>
+            </collision>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/kfe_servo.STL" scale="1 1 1"/>
+                </geometry>
+            </collision>
+        </link>
+        <link name="${prefix}tibia_link">
+            <inertial>
+                <origin xyz="0.0019117 0.036934 -0.0058072" rpy="0 0 0"/>
+                <mass value="0.052333"/>
+                <inertia ixx="3.6178E-05" ixy="3.873E-06" ixz="-6.0786E-07" iyy="2.0314E-05" iyz="6.2224E-06"
+                         izz="2.4513E-05"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/tibia.STL" scale="1 1 1"/>
+                </geometry>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/tibia.STL" scale="1 1 1"/>
+                </geometry>
+            </collision>
+        </link>
 
-<!--    <joint name="hfe_joint" type="revolute">-->
-<!--        <origin xyz="0.023 -1.008 0.0295" rpy="3.14 -1.5708 0 "/>-->
-<!--        <parent link="shoulder_link"/>-->
-<!--        <child link="femur_link"/>-->
-<!--        <axis xyz="0 0 -1"/>-->
-<!--        <limit lower="0" upper="0" effort="0" velocity="0"/>-->
-<!--    </joint>-->
+        <joint name="${prefix}hfe_joint" type="revolute">
+            <origin xyz="0.02088 0 0.0165" rpy="3.1416 -1.5708 0 "/>
+            <parent link="${prefix}shoulder_link"/>
+            <child link="${prefix}femur_link"/>
+            <axis xyz="0 0 -1"/>
+            <limit lower="0" upper="0" effort="0" velocity="0"/>
+        </joint>
 
-<!--    <joint name="kfe_joint" type="revolute">-->
-<!--        <origin xyz="0.046 0 0.0106" rpy="0 0 1.5708"/>-->
-<!--        <parent link="femur_link"/>-->
-<!--        <child link="tibia_link"/>-->
-<!--        <axis xyz="0 0 -1"/>-->
-<!--        <limit lower="0" upper="0" effort="50" velocity="50"/>-->
-<!--    </joint>-->
+        <joint name="${prefix}kfe_joint" type="revolute">
+            <origin xyz="0.046 0 0.0106" rpy="0 0 -1.5708"/>
+            <parent link="${prefix}femur_link"/>
+            <child link="${prefix}tibia_link"/>
+            <axis xyz="0 0 -1"/>
+            <limit lower="0" upper="0" effort="50" velocity="50"/>
+        </joint>
     </xacro:macro>
 </robot>
