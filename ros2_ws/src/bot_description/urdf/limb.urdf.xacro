@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="limb">
+    <!-- Joint limits loaded from YAML -->
+    <xacro:property name="limits"
+                    value="${xacro.load_yaml('$(find bot_description)/config/joint_limits.yaml')}"/>
+
+    <!-- Limb macro definition -->
     <xacro:macro name="limb" params="prefix mult">
         <!-- Links -->
         <link name="${prefix}shoulder_link">
@@ -113,11 +118,14 @@
         </link>
 
         <joint name="${prefix}hfe_joint" type="revolute">
-            <origin xyz="0.02088 0 0.0165" rpy="${mult * 3.1416} -1.5708 0 "/>
+            <origin xyz="0.02088 0 0.0165" rpy="3.1416 -1.5708 0 "/>
             <parent link="${prefix}shoulder_link"/>
             <child link="${prefix}femur_link"/>
             <axis xyz="0 0 -1"/>
-            <limit lower="0" upper="0" effort="0" velocity="0"/>
+            <limit lower="${limits['hfe']['lower']}"
+                   upper="${limits['hfe']['upper']}"
+                   effort="${limits['hfe']['effort']}"
+                   velocity="${limits['hfe']['velocity']}"/>
         </joint>
 
         <joint name="${prefix}kfe_joint" type="revolute">
@@ -125,7 +133,10 @@
             <parent link="${prefix}femur_link"/>
             <child link="${prefix}tibia_link"/>
             <axis xyz="0 0 -1"/>
-            <limit lower="0" upper="0" effort="50" velocity="50"/>
+            <limit lower="${limits['kfe']['lower']}"
+                   upper="${limits['kfe']['upper']}"
+                   effort="${limits['kfe']['effort']}"
+                   velocity="${limits['kfe']['velocity']}"/>
         </joint>
     </xacro:macro>
 </robot>
