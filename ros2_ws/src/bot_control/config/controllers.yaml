@@ -11,6 +11,15 @@ controller_manager:
 joint_group_position_controller:
   ros__parameters:
     joints:  # must match names in commander_params.yaml
-      - haa_joint
-      - hfe_joint
-      - knee_joint
+      - fr_haa_joint
+      - fr_hfe_joint
+      - fr_kfe_joint
+      - fl_haa_joint
+      - fl_hfe_joint
+      - fl_kfe_joint
+      - br_haa_joint
+      - br_hfe_joint
+      - br_kfe_joint
+      - bl_haa_joint
+      - bl_hfe_joint
+      - bl_kfe_joint
