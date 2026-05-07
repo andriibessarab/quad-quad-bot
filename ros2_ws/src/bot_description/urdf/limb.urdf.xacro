@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="limb">
-    <xacro:macro name="limb" params="prefix">
+    <xacro:macro name="limb" params="prefix mult">
         <!-- Links -->
         <link name="${prefix}shoulder_link">
             <inertial>
@@ -113,7 +113,7 @@
         </link>
 
         <joint name="${prefix}hfe_joint" type="revolute">
-            <origin xyz="0.02088 0 0.0165" rpy="3.1416 -1.5708 0 "/>
+            <origin xyz="0.02088 0 0.0165" rpy="${mult * 3.1416} -1.5708 0 "/>
             <parent link="${prefix}shoulder_link"/>
             <child link="${prefix}femur_link"/>
             <axis xyz="0 0 -1"/>
@@ -121,7 +121,7 @@
         </joint>
 
         <joint name="${prefix}kfe_joint" type="revolute">
-            <origin xyz="0.046 0 0.0106" rpy="0 0 -1.5708"/>
+            <origin xyz="0.046 0 0.0106" rpy="0 0 ${mult * -1.5708}"/>
             <parent link="${prefix}femur_link"/>
             <child link="${prefix}tibia_link"/>
             <axis xyz="0 0 -1"/>

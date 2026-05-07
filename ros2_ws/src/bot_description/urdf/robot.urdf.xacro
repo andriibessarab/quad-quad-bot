@@ -6,8 +6,8 @@
     <xacro:include filename="$(find bot_description)/urdf/limb.urdf.xacro"/>
 
     <!-- Macro that adds a limb and joints it to body -->
-    <xacro:macro name="add_limb" params="prefix x y z r p yw">
-        <xacro:limb prefix="${prefix}_"/>
+    <xacro:macro name="add_limb" params="prefix x y z r p yw mult">
+        <xacro:limb prefix="${prefix}_" mult="${mult}"/>
         <joint name="${prefix}_haa_joint" type="revolute">
             <parent link="body_link"/>
             <child link="${prefix}_shoulder_link"/>
@@ -18,8 +18,8 @@
     </xacro:macro>
 
     <xacro:body/>
-    <xacro:add_limb prefix="fl" x="0.0765"  y="-0.009" z="-0.0338" r="0" p="1.5708"  yw="0"/>
-<!--    <xacro:add_limb prefix="fr" x="0.0765"  y="-0.009" z="0.0338"  r="0" p="1.5708"  yw="0"/>-->
-<!--    <xacro:add_limb prefix="bl" x="-0.0765" y="-0.009" z="-0.0338" r="0" p="-1.5708" yw="0"/>-->
-    <xacro:add_limb prefix="br" x="-0.0765" y="-0.009" z="0.0338"  r="0" p="-1.5708" yw="0"/>
+    <xacro:add_limb prefix="fr" x="0.0765" y="-0.009" z="-0.0338" r="0" p="1.5708" yw="0" mult="1"/>
+    <xacro:add_limb prefix="fl" x="0.0765"  y="-0.009" z="0.0338"  r="3.1416" p="-1.5708"  yw="0" mult="-1"/>
+    <xacro:add_limb prefix="br" x="-0.0765" y="-0.009" z="-0.0338" r="3.1416" p="1.5708" yw="0" mult="-1"/>
+    <xacro:add_limb prefix="bl" x="-0.0765" y="-0.009" z="0.0338" r="0" p="-1.5708" yw="0" mult="1"/>
 </robot>
