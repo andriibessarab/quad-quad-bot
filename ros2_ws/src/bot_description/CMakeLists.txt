@@ -5,6 +5,6 @@ project(bot_description)
 find_package(ament_cmake REQUIRED)
 
 # Install robot description assets and preview launch scripts
-install(DIRECTORY urdf meshes launch rviz DESTINATION share/${PROJECT_NAME})
+install(DIRECTORY urdf meshes launch rviz config DESTINATION share/${PROJECT_NAME})
 
 ament_package()

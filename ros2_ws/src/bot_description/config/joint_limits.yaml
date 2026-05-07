@@ -1,0 +1,17 @@
+haa:
+  lower: -3.1416
+  upper: 3.1416
+  effort: 1000.0
+  velocity: 5.0
+
+hfe:
+  lower: -3.1416
+  upper: 3.1416
+  effort: 1000.0
+  velocity: 5.0
+
+kfe:
+  lower: -3.1416
+  upper: 3.1416
+  effort: 1000.0
+  velocity: 5.0
