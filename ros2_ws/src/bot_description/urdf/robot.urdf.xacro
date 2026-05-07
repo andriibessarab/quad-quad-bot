@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="quad_quad_bot">
+
+    <xacro:include filename="$(find bot_description)/urdf/body.urdf.xacro"/>
+    <xacro:include filename="$(find bot_description)/urdf/limb.urdf.xacro"/>
+
+    <xacro:body/>
+    <xacro:limb prefix="fl_"/>
+
+    <joint name="fl_haa_joint" type="revolute">
+        <parent link="body_link"/>
+        <child link="fl_shoulder_link"/>
+        <origin xyz="0.0765 -0.009 -0.0338" rpy="0 1.5708 0"/>
+        <axis xyz="0 0 1"/>
+        <limit lower="0" upper="0" effort="0" velocity="0"/>
+    </joint>
+</robot>
