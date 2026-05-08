@@ -1,19 +1,15 @@
 locomotion_commander:
   ros__parameters:
-    action_server_name: "/joint_trajectory_controller/follow_joint_trajectory"
+    limb_prefixes:  # must match names in controllers.yaml
+      - fr
+      - fl
+      - br
+      - bl
     joints:  # must match names in controllers.yaml
-      - fr_haa_joint
-      - fr_hfe_joint
-      - fr_kfe_joint
-      - fl_haa_joint
-      - fl_hfe_joint
-      - fl_kfe_joint
-      - br_haa_joint
-      - br_hfe_joint
-      - br_kfe_joint
-      - bl_haa_joint
-      - bl_hfe_joint
-      - bl_kfe_joint
+      - haa_joint
+      - hfe_joint
+      - kfe_joint
     l1_len: 0.02088  # hip offset (m)
     l2_len: 0.046  # femur length (m)
     l3_len: 0.048  # tibia Length (m)
+    command_dispatch_frequency: 100.0  #Hz
