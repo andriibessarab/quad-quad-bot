@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="body">
+    <xacro:macro name="body" params="">
+        <!-- Links -->
+        <link name="base_link"/>
+        <link name="body_link">
+            <inertial>
+                <origin xyz="0.0003026 -0.033305 -0.00066994" rpy="0 0 0"/>
+                <mass value="0.33425"/>
+                <inertia ixx="0.00022631" ixy="1.6841E-06" ixz="2.4325E-07" iyy="0.00068307" iyz="-2.2508E-06"
+                         izz="0.00051261"/>
+            </inertial>
+            <visual>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/body.STL"/>
+                </geometry>
+                <material name="body_plastic">
+                    <color rgba="0.65 0.70 0.75 1.0"/>
+                </material>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <geometry>
+                    <mesh filename="package://bot_description/meshes/body.STL"/>
+                </geometry>
+            </collision>
+        </link>
+
+        <!-- Joints -->
+        <joint name="base_to_body" type="fixed">
+            <parent link="base_link"/>
+            <child link="body_link"/>
+            <origin xyz="0 0 0" rpy="-1.5708 0 0"/>
+        </joint>
+    </xacro:macro>
+</robot>

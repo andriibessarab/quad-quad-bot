@@ -20,8 +20,8 @@ def generate_launch_description():
     pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
 
     # Process the Xacro file
-    xacro_file = os.path.join(pkg_bot_description, "urdf", "quad_quad_limb.urdf.xacro")
-    robot_desc_content = Command(["xacro ", xacro_file])
+    xacro_file = os.path.join(pkg_bot_description, "urdf", "robot.urdf.xacro")
+    robot_desc_content = Command(["xacro ", xacro_file, " sim:=true"])
 
     # Set GZ_SIM_RESOURCE_PATH so Gazebo can find meshes/models
     set_gz_path = SetEnvironmentVariable(
@@ -62,7 +62,7 @@ def generate_launch_description():
     load_jtc = Node(
         package="controller_manager",
         executable="spawner",
-        arguments=["joint_trajectory_controller"],
+        arguments=["joint_group_position_controller"],
     )
 
     # Bridge the clock so ROS 2 and Gazebo stay in sync

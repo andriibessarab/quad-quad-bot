@@ -1,4 +1,5 @@
 #include "bot_kinematics/ik_solver.hpp"
+#include "rclcpp/rclcpp.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -7,6 +8,8 @@
 #define _USE_MATH_DEFINES
 
 namespace bot_kinematics {
+std::string LOGGER_NAME = "ik_solver";
+
 IkSolver::IkSolver(const LimbDimensions &dims) : limb_dimensions_(dims) {}
 
 LimbJointAngles IkSolver::calculate_ik(double target_x, double target_y,
@@ -18,39 +21,54 @@ LimbJointAngles IkSolver::calculate_ik(double target_x, double target_y,
   double l3 = limb_dimensions_.l3;
 
   /////////////////////////// CALCULATIONS ///////////////////////////
-  // planar distances
-  double d_yz_sq = target_y * target_y + target_z * target_z - l1 * l1;
-  if (d_yz_sq < 0)
-    d_yz_sq = 0;                    // prevent NaN
-  double d_yz = std::sqrt(d_yz_sq); // B term from calulations
+  // Refer to docs for calculation and geometrical representation
+  //
+  // Assumes [haa, hfe, kfe] = (0, 0, 0) woth shoulder parallel to body and limb
+  // in vertical "I" position
+  ////////////////////////////////////////////////////////////////////
 
-  double d_sq = d_yz_sq + target_x * target_x;
-  double d = std::sqrt(d_sq);
+  // HAA calculation
+  target_z *= -1;
+  double alpha = std::atan2(target_y, target_z);
+  double A = std::sqrt(target_y * target_y + target_z * target_z);
+  if (A < l1) { // handle inside-radius targets
+    A = std::max(A, l1);
+    RCLCPP_WARN(rclcpp::get_logger(LOGGER_NAME),
+                "recieved target within forbidden inner radius - clamping the "
+                "boundary");
+  }
+  double H = std::sqrt(A * A - l1 * l1);
+  double beta = std::atan2(H, l1);
+  angles.haa = alpha + beta - M_PI_2;
 
-  // HAA
-  angles.haa =
-      -(std::atan2(d_yz, l1) + std::atan2(target_y, -target_z) - M_PI_2);
-
-  // raw angles
-  double cos_gamma = (l2 * l2 + l3 * l3 - d_sq) / (2 * l2 * l3);
-  cos_gamma = std::max(-1.0, std::min(1.0, cos_gamma));
-  double gamma = std::acos(cos_gamma); // inner knee angle
-
-  // alpha = angle of femur forward of the straight line to the foot
-  double cos_alpha = (l2 * l2 + d_sq - l3 * l3) / (2 * l2 * d);
-  cos_alpha = std::max(-1.0, std::min(1.0, cos_alpha));
-  double alpha = std::acos(cos_alpha);
-
-  // theta = angle of the foot forward of straight down
-  double theta = std::atan2(target_x, d_yz);
-
-  // KFE
-  // Bending fwd/up (straightening) is +ve. Zero is L-shape (PI/2).
-  angles.kfe = gamma - M_PI_2;
-
-  // HFE
-  // 0 rad means  femur points horizontally forward. Bending down is -ve
-  angles.hfe = (M_PI / 2) - (alpha + theta);
+  // HFE & KFE calculation
+  double B = std::sqrt(target_x * target_x + H * H);
+  if (B < 1e-9) { // happens when target is right under hfe
+    B = 1e-9;
+    RCLCPP_WARN(rclcpp::get_logger(LOGGER_NAME),
+                "received target at planar hip singularity - clamping B away "
+                "from zero");
+  }
+  if (B > l2 + l3) { // target is further away then femur + tibia
+    B = l2 + l3;
+    RCLCPP_WARN(rclcpp::get_logger(LOGGER_NAME),
+                "received target at/beyond planar outer reach - saturating to "
+                "boundary pose");
+  } else if (B < std::abs(l2 - l3)) { // target is too close to hfe
+    B = std::abs(l2 - l3);
+    RCLCPP_WARN(
+        rclcpp::get_logger(LOGGER_NAME),
+        "received target at/within planar inner reach limit - saturating "
+        "to boundary pose");
+  }
+  double rho = std::atan2(target_x, H);
+  double phi_arg = (l3 * l3 - l2 * l2 - B * B) / (-2 * l2 * B);
+  phi_arg = std::clamp(phi_arg, -1.0, 1.0);
+  double phi = std::acos(phi_arg);
+  angles.hfe = rho + phi;
+  double kfe_arg = (B * B - l2 * l2 - l3 * l3) / (-2 * l2 * l3);
+  kfe_arg = std::clamp(kfe_arg, -1.0, 1.0);
+  angles.kfe = M_PI - std::acos(kfe_arg);
 
   return angles;
 }

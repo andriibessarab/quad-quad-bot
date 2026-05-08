@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ros2_control">
+    <!-- Joint limits loaded from YAML -->
+    <xacro:property name="limits" value="${xacro.load_yaml('$(find bot_description)/config/joint_limits.yaml')}"/>
+
+    <!-- Single ros2 control joint -->
+    <xacro:macro name="_ros2_control_joint" params="joint_name lower upper initial:=0.0">
+        <joint name="${joint_name}">
+            <command_interface name="position">
+                <param name="min">${lower}</param>
+                <param name="max">${upper}</param>
+            </command_interface>
+            <state_interface name="position">
+                <param name="initial_value">${initial}</param>
+            </state_interface>
+            <state_interface name="velocity"/>
+            <state_interface name="effort"/>
+        </joint>
+    </xacro:macro>
+
+    <!-- Ros 2 Control Macro with all joints -->
+    <xacro:macro name="ros2_control" params="name hardware_plugin">
+        <ros2_control name="${name}" type="system">
+            <hardware>
+                <plugin>${hardware_plugin}</plugin>
+            </hardware>
+
+            <xacro:_ros2_control_joint joint_name="fr_haa_joint" lower="${limits['haa']['lower']}"
+                                       upper="${limits['haa']['upper']}"/>
+            <xacro:_ros2_control_joint joint_name="fr_hfe_joint" lower="${limits['hfe']['lower']}"
+                                       upper="${limits['hfe']['upper']}"/>
+            <xacro:_ros2_control_joint joint_name="fr_kfe_joint" lower="${limits['kfe']['lower']}"
+                                       upper="${limits['kfe']['upper']}"/>
+
+            <xacro:_ros2_control_joint joint_name="fl_haa_joint" lower="${limits['haa']['lower']}"
+                                       upper="${limits['haa']['upper']}"/>
+            <xacro:_ros2_control_joint joint_name="fl_hfe_joint" lower="${limits['hfe']['lower']}"
+                                       upper="${limits['hfe']['upper']}"/>
+            <xacro:_ros2_control_joint joint_name="fl_kfe_joint" lower="${limits['kfe']['lower']}"
+                                       upper="${limits['kfe']['upper']}"/>
+
+            <xacro:_ros2_control_joint joint_name="br_haa_joint" lower="${limits['haa']['lower']}"
+                                       upper="${limits['haa']['upper']}"/>
+            <xacro:_ros2_control_joint joint_name="br_hfe_joint" lower="${limits['hfe']['lower']}"
+                                       upper="${limits['hfe']['upper']}"/>
+            <xacro:_ros2_control_joint joint_name="br_kfe_joint" lower="${limits['kfe']['lower']}"
+                                       upper="${limits['kfe']['upper']}"/>
+
+            <xacro:_ros2_control_joint joint_name="bl_haa_joint" lower="${limits['haa']['lower']}"
+                                       upper="${limits['haa']['upper']}"/>
+            <xacro:_ros2_control_joint joint_name="bl_hfe_joint" lower="${limits['hfe']['lower']}"
+                                       upper="${limits['hfe']['upper']}"/>
+            <xacro:_ros2_control_joint joint_name="bl_kfe_joint" lower="${limits['kfe']['lower']}"
+                                       upper="${limits['kfe']['upper']}"/>
+        </ros2_control>
+    </xacro:macro>
+</robot>

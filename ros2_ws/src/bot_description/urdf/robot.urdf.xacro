@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="quad_quad_bot">
+    <!-- Mode selection -->
+    <xacro:arg name="sim" default="true"/>
+
+    <!-- Hardware args -->
+    <xacro:arg name="hardware_plugin" default="mock_components/GenericSystem"/>
+
+    <!-- Common leg placement/orientation values -->
+    <xacro:property name="leg_x" value="0.0765"/>
+    <xacro:property name="leg_y" value="-0.009"/>
+    <xacro:property name="leg_z" value="0.0338"/>
+    <xacro:property name="leg_pitch" value="1.5708"/>
+    <xacro:property name="leg_roll_flip" value="3.1416"/>
+
+    <!-- Import macros from other files -->
+    <xacro:include filename="$(find bot_description)/urdf/body.urdf.xacro"/>
+    <xacro:include filename="$(find bot_description)/urdf/limb.urdf.xacro"/>
+    <xacro:include filename="$(find bot_description)/urdf/ros2_control.urdf.xacro"/>
+    <xacro:include filename="$(find bot_description)/urdf/gazebo.urdf.xacro"/>
+
+    <!-- Call macros -->
+    <xacro:body/>
+    <xacro:limb prefix="fr" x="${leg_x}" y="${leg_y}" z="${-leg_z}" r="0" p="${leg_pitch}" yw="0" mult="1"/>
+    <xacro:limb prefix="fl" x="${leg_x}" y="${leg_y}" z="${leg_z}" r="${leg_roll_flip}" p="${-leg_pitch}" yw="0"
+                mult="-1"/>
+    <xacro:limb prefix="br" x="${-leg_x}" y="${leg_y}" z="${-leg_z}" r="${leg_roll_flip}" p="${leg_pitch}" yw="0"
+                mult="-1"/>
+    <xacro:limb prefix="bl" x="${-leg_x}" y="${leg_y}" z="${leg_z}" r="0" p="${-leg_pitch}" yw="0" mult="1"/>
+    <!-- macros specific to sim/hardware modes -->
+    <xacro:if value="$(arg sim)">
+        <xacro:ros2_control name="GazeboSystem" hardware_plugin="gz_ros2_control/GazeboSimSystem"/>
+        <xacro:gazebo_ros2_control/>
+    </xacro:if>
+    <xacro:unless value="$(arg sim)">
+        <xacro:ros2_control name="HardwareSystem" hardware_plugin="$(arg hardware_plugin)"/>
+    </xacro:unless>
+</robot>
