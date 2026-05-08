@@ -19,6 +19,9 @@ const std::string LOCOMOTION_COMMANDER_NODE_NAME = "locomotion_commander";
 
 // param names
 const std::string LIMB_PREFIXES_PARAM_NAME = "limb_prefixes";
+const std::string LIMB_INVERSIONS_PARAM_NAME = "limb_inversions";
+const std::string INVERT_X_PARAM_NAME = "invert_x";
+const std::string INVERT_Y_PARAM_NAME = "invert_y";
 const std::string JOINTS_PARAM_NAME = "joints";
 const std::string L1_PARAM_NAME = "l1_len";
 const std::string L2_PARAM_NAME = "l2_len";
@@ -45,6 +48,24 @@ public:
       this->joints_ =
           this->declare_parameter<std::vector<std::string>>(JOINTS_PARAM_NAME);
 
+      // store number of joints and limbs
+      this->limbs_count_ = limb_prefixes_.size();
+      this->joints_count_ = joints_.size();
+
+      // store limb inversions
+      this->limb_info_.reserve(this->limbs_count_);
+      for (int i = 0; i < this->limbs_count_; ++i) {
+        limb_info info;
+        const std::string &prefix = this->limb_prefixes_[i];
+        info.invert_x =
+            this->declare_parameter<bool>(LIMB_INVERSIONS_PARAM_NAME + "." +
+                                          prefix + "." + INVERT_X_PARAM_NAME);
+        info.invert_y =
+            this->declare_parameter<bool>(LIMB_INVERSIONS_PARAM_NAME + "." +
+                                          prefix + "." + INVERT_Y_PARAM_NAME);
+        this->limb_info_.push_back(info);
+      }
+
       // get limb dims from params
       dims.l1 = this->declare_parameter<double>(L1_PARAM_NAME);
       dims.l2 = this->declare_parameter<double>(L2_PARAM_NAME);
@@ -61,16 +82,12 @@ public:
       throw e; // kill the node
     }
 
-    // store number of joints and limbs
-    this->limbs_count_ = limb_prefixes_.size();
-    this->joints_count_ = joints_.size();
-
     // init IK solver
     this->ik_solver_ = std::make_unique<bot_kinematics::IkSolver>(dims);
 
     // TODO should instead be standing pose - this is dangerous
     this->joint_command_.data.assign(this->limbs_count_ * this->joints_count_,
-                                     0.1);
+                                     0.0);
 
     // init subscription to target topics (reciving cartesian points)
     this->create_target_subscribers();
@@ -91,6 +108,14 @@ public:
     RCLCPP_INFO(this->get_logger(), "%s node initialized.",
                 LOCOMOTION_COMMANDER_NODE_NAME.c_str());
   }
+
+  /**
+   * Stores limb inversions needed to make fwd and left +ve joint directions.
+   */
+  struct limb_info {
+    bool invert_x;
+    bool invert_y;
+  };
 
 private:
   /**
@@ -122,7 +147,7 @@ private:
   void create_target_subscribers() {
     target_subscribers_.reserve(limb_prefixes_.size());
 
-    for (int i = 0; i < limb_prefixes_.size(); ++i) {
+    for (int i = 0; i < this->limbs_count_; ++i) {
       // concat. target topic name
       std::string topic = limb_prefixes_[i] + "/" + TARGET_TOPIC_NAME;
 
@@ -143,8 +168,10 @@ private:
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr
       joint_command_publisher_;
 
-  // vector with limb prefixes (ie., front-left, back-right, etc.)
+  // vectors with limb prefixes (ie., front-left, back-right, etc.) and limb
+  // inversions
   std::vector<std::string> limb_prefixes_;
+  std::vector<limb_info> limb_info_;
   int limbs_count_;
 
   // vector with joint names (ie., shoulder, knee, etc)

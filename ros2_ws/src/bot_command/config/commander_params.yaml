@@ -1,14 +1,28 @@
 locomotion_commander:
   ros__parameters:
-    limb_prefixes:  # must match names in controllers.yaml
+    # joints and limbs names and order must match in controllers.yaml
+    joints:
+      - haa_joint
+      - hfe_joint
+      - kfe_joint
+    limb_prefixes:
       - fr
       - fl
       - br
       - bl
-    joints:  # must match names in controllers.yaml
-      - haa_joint
-      - hfe_joint
-      - kfe_joint
+    limb_inversions:  # arrays specify which directions need inversion
+      fr:
+        invert_x: true   # makes fwd +ve
+        invert_y: false  # makes left +ve
+      fl:
+        invert_x: false
+        invert_y: false
+      br:
+        invert_x: true
+        invert_y: true
+      bl:
+        invert_x: false
+        invert_y: true
     l1_len: 0.02088  # hip offset (m)
     l2_len: 0.046  # femur length (m)
     l3_len: 0.048  # tibia Length (m)
