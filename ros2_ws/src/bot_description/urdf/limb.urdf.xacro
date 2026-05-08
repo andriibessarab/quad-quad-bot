@@ -121,7 +121,7 @@
             <origin xyz="0.02088 0 0.0165" rpy="1.5708 ${0.0 if mult > 0 else 3.1416} 1.5708"/>
             <parent link="${prefix}shoulder_link"/>
             <child link="${prefix}femur_link"/>
-            <axis xyz="0 0 -1"/>
+            <axis xyz="0 0 ${mult * 1}"/>
             <limit lower="${limits['hfe']['lower']}"
                    upper="${limits['hfe']['upper']}"
                    effort="${limits['hfe']['effort']}"
@@ -132,7 +132,7 @@
             <origin xyz="0.046 0 0.0106" rpy="0 0 0"/>
             <parent link="${prefix}femur_link"/>
             <child link="${prefix}tibia_link"/>
-            <axis xyz="0 0 -1"/>
+            <axis xyz="0 0 ${mult * -1}"/>
             <limit lower="${limits['kfe']['lower']}"
                    upper="${limits['kfe']['upper']}"
                    effort="${limits['kfe']['effort']}"
@@ -147,7 +147,7 @@
             <parent link="${parent_link}"/>
             <child link="${prefix}_shoulder_link"/>
             <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} ${yw}"/>
-            <axis xyz="0 0 1"/>
+            <axis xyz="0 0 ${mult * -1}"/>
             <limit lower="${limits['haa']['lower']}"
                    upper="${limits['haa']['upper']}"
                    effort="${limits['haa']['effort']}"
