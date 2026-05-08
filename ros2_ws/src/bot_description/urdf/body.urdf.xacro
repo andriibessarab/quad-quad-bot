@@ -16,6 +16,9 @@
                 <geometry>
                     <mesh filename="package://bot_description/meshes/body.STL"/>
                 </geometry>
+                <material name="body_plastic">
+                    <color rgba="0.65 0.70 0.75 1.0"/>
+                </material>
             </visual>
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>

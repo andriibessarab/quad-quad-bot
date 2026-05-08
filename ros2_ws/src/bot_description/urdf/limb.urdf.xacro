@@ -20,18 +20,27 @@
                 <geometry>
                     <mesh filename="package://bot_description/meshes/haa_horn.STL" scale="1 1 1"/>
                 </geometry>
+                <material name="joint_horn_accent">
+                    <color rgba="0.95 0.65 0.20 1.0"/>
+                </material>
             </visual>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
                     <mesh filename="package://bot_description/meshes/shoulder_casing.STL" scale="1 1 1"/>
                 </geometry>
+                <material name="shoulder_plastic">
+                    <color rgba="0.55 0.62 0.72 1.0"/>
+                </material>
             </visual>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
                     <mesh filename="package://bot_description/meshes/hfe_servo.STL" scale="1 1 1"/>
                 </geometry>
+                <material name="motor_dark_gray">
+                    <color rgba="0.20 0.20 0.22 1.0"/>
+                </material>
             </visual>
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -64,18 +73,27 @@
                 <geometry>
                     <mesh filename="package://bot_description/meshes/hfe_horn.STL" scale="1 1 1"/>
                 </geometry>
+                <material name="joint_horn_accent">
+                    <color rgba="0.95 0.65 0.20 1.0"/>
+                </material>
             </visual>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
                     <mesh filename="package://bot_description/meshes/femur.STL" scale="1 1 1"/>
                 </geometry>
+                <material name="femur_plastic">
+                    <color rgba="0.52 0.69 0.84 1.0"/>
+                </material>
             </visual>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
                     <mesh filename="package://bot_description/meshes/kfe_servo.STL" scale="1 1 1"/>
                 </geometry>
+                <material name="motor_dark_gray">
+                    <color rgba="0.20 0.20 0.22 1.0"/>
+                </material>
             </visual>
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -108,6 +126,9 @@
                 <geometry>
                     <mesh filename="package://bot_description/meshes/tibia.STL" scale="1 1 1"/>
                 </geometry>
+                <material name="tibia_plastic">
+                    <color rgba="0.56 0.78 0.62 1.0"/>
+                </material>
             </visual>
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
