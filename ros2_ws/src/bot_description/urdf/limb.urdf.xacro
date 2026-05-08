@@ -118,7 +118,7 @@
         </link>
 
         <joint name="${prefix}hfe_joint" type="revolute">
-            <origin xyz="0.02088 0 0.0165" rpy="3.1416 -1.5708 0 "/>
+            <origin xyz="0.02088 0 0.0165" rpy="1.5708 ${0.0 if mult > 0 else 3.1416} 1.5708"/>
             <parent link="${prefix}shoulder_link"/>
             <child link="${prefix}femur_link"/>
             <axis xyz="0 0 -1"/>
@@ -129,7 +129,7 @@
         </joint>
 
         <joint name="${prefix}kfe_joint" type="revolute">
-            <origin xyz="0.046 0 0.0106" rpy="0 0 ${mult * -1.5708}"/>
+            <origin xyz="0.046 0 0.0106" rpy="0 0 0"/>
             <parent link="${prefix}femur_link"/>
             <child link="${prefix}tibia_link"/>
             <axis xyz="0 0 -1"/>
