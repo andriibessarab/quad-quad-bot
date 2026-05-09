@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace bot_gait {
+namespace bot_control {
 // param names
 const std::string CONTROL_LOOP_FREQUENCY_PARAM_NAME("control_loop_frequency");
 const std::string LIMB_PREFIXES_PARAM_NAME("limb_prefixes");
@@ -135,11 +135,11 @@ private:
   std::vector<std::string> limb_prefixes_;
   geometry_msgs::msg::Point home_point_;
 };
-} // namespace bot_gait
+} // namespace bot_control
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<bot_gait::LimbTrajectoryGenerator>();
+  auto node = std::make_shared<bot_control::LimbTrajectoryGenerator>();
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

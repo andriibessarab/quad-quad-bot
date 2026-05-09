@@ -10,7 +10,9 @@ controller_manager:
 
 joint_group_position_controller:
   ros__parameters:
-    joints:  # must match names in commander_params.yaml
+    # Joint names must be listed in the same order produced by concatenating each limb prefix
+    # with each joint suffix from locomotion_params.yaml.
+    joints:
       - fr_haa_joint
       - fr_hfe_joint
       - fr_kfe_joint

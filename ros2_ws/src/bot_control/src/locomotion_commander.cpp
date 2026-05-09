@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace bot_command {
+namespace bot_control {
 // consts
 const std::string LOCOMOTION_COMMANDER_NODE_NAME = "locomotion_commander";
 
@@ -197,11 +197,11 @@ private:
   rclcpp::TimerBase::SharedPtr command_dispatch_timer_;
   int command_dispatch_frequency_;
 };
-} // namespace bot_command
+} // namespace bot_control
 
 int main(int argc, char **argv) {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<bot_command::LocomotionCommander>();
+  auto node = std::make_shared<bot_control::LocomotionCommander>();
   rclcpp::spin(node);
   rclcpp::shutdown();
   return 0;

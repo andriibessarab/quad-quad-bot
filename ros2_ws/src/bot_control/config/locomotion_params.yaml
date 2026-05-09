@@ -1,0 +1,46 @@
+/**:
+  ros__parameters:
+    # These entries define the per-limb joint suffixes and limb prefixes.
+    # When concatenated as "<prefix>_<joint>", the resulting joint list must
+    # match the exact order used in controllers.yaml.
+    joints:
+      - haa_joint
+      - hfe_joint
+      - kfe_joint
+    limb_prefixes:
+      - fr
+      - fl
+      - br
+      - bl
+
+    # Lengths of shoulder (l1), femur (l2) and tibia (l3) links
+    l1_len: 0.02088  # hip offset (m)
+    l2_len: 0.046  # femur length (m)
+    l3_len: 0.048  # tibia Length (m)
+
+    # Home position
+    home_x: -0.012
+    home_y: 0.02088
+    home_z: -0.078
+
+locomotion_commander:
+  ros__parameters:
+    limb_info: # needed to account for inversions
+      fr:
+        is_right: true
+        is_back: false
+      fl:
+        is_right: false
+        is_back: false
+      br:
+        is_right: true
+        is_back: true
+      bl:
+        is_right: false
+        is_back: true
+
+    command_dispatch_frequency: 100.0  #Hz
+
+gait_planner:
+  ros__parameters:
+    control_loop_frequency: 100.0  # Hz
