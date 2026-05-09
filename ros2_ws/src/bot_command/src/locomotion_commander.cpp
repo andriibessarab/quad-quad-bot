@@ -1,4 +1,4 @@
-#include "bot_kinematics/ik_solver.hpp"
+#include "bot_math/ik_solver.hpp"
 #include "geometry_msgs/msg/point.hpp"
 #include "rclcpp/exceptions.hpp"
 #include "rclcpp/publisher.hpp"
@@ -39,7 +39,7 @@ const std::string JOINT_COMMAND_TOPIC =
 class LocomotionCommander : public rclcpp::Node {
 public:
   LocomotionCommander() : Node(LOCOMOTION_COMMANDER_NODE_NAME) {
-    bot_kinematics::LimbDimensions dims;
+    bot_math::LimbDimensions dims;
 
     // declare and get params
     try {
@@ -81,7 +81,7 @@ public:
     }
 
     // init IK solver
-    this->ik_solver_ = std::make_unique<bot_kinematics::IkSolver>(dims);
+    this->ik_solver_ = std::make_unique<bot_math::IkSolver>(dims);
 
     // TODO should instead be standing pose - this is dangerous
     this->joint_command_.data.assign(this->limbs_count_ * this->joints_count_,
@@ -133,7 +133,7 @@ private:
     double z = msg->z;
 
     // run IK and store calculated limb joint angles
-    bot_kinematics::LimbJointAngles joint_angles =
+    bot_math::LimbJointAngles joint_angles =
         this->ik_solver_->calculate_ik(x, y, z);
 
     // update command
@@ -191,7 +191,7 @@ private:
   std_msgs::msg::Float64MultiArray joint_command_;
 
   // instance of ik solver
-  std::unique_ptr<bot_kinematics::IkSolver> ik_solver_;
+  std::unique_ptr<bot_math::IkSolver> ik_solver_;
 
   // heartbeat timer to publish command
   rclcpp::TimerBase::SharedPtr command_dispatch_timer_;

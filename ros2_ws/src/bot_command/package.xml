@@ -13,7 +13,7 @@
     <depend>std_msgs</depend>
     <depend>geometry_msgs</depend>
 
-    <depend>bot_kinematics</depend>
+    <depend>bot_math</depend>
 
     <exec_depend>ament_index_python</exec_depend>
     <exec_depend>launch</exec_depend>
