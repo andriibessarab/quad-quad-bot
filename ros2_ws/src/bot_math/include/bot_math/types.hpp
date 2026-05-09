@@ -42,20 +42,20 @@ enum class GaitMode {
 };
 
 struct LimbTrajectoryConfig {
-  std::string name;      // limb name
-  bool is_right; // true if this limb is on the right side
-  bool is_back;  // true if this limb is on the back half
-  double phase_offset;   // phase shift for this limb in the gait cycle
+  std::string name;    // limb name
+  bool is_right;       // true if this limb is on the right side
+  bool is_back;        // true if this limb is on the back half
+  double phase_offset; // phase shift for this limb in the gait cycle
   geometry_msgs::msg::Point home_point;
 };
 
 struct LimbTrajectoryInput {
   GaitMode gait_mode = GaitMode::Stand; // current gate mode
-  double global_phase = 0.0;    // global phase of gate (w/ no offset)
-  double step_len = 0.0;        // forward step length for walking
-  double step_height = 0.0;     // swing foot lift height
-  double swing_duration = 0.0;  // duration of swing phase
-  double stance_duration = 0.0; // duration of stance phase
+  double global_phase = 0.0;            // global phase of gate (w/ no offset)
+  double step_len = 0.0;                // forward step length for walking
+  double step_height = 0.0;             // swing foot lift height
+  double swing_duration = 0.0;          // duration of swing phase
+  double stance_duration = 0.0;         // duration of stance phase
 };
 } // namespace bot_math
 

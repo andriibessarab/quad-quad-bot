@@ -1,5 +1,6 @@
 #include "bot_math/limb_trajectory.hpp"
 
+#include <cmath>
 #include <iostream>
 
 namespace bot_math {
@@ -9,14 +10,44 @@ LimbTrajectory::LimbTrajectory(const LimbTrajectoryConfig &config)
 
 geometry_msgs::msg::Point
 LimbTrajectory::compute_target(const LimbTrajectoryInput &input) {
-  geometry_msgs::msg::Point target;
-  double limb_phase = input.global_phase + config_.phase_offset;
+  geometry_msgs::msg::Point target = config_.home_point;
+  double limb_phase = std::fmod(input.global_phase + config_.phase_offset, 1.0);
+  if (limb_phase < 0.0) {
+    limb_phase += 1.0;
+  }
 
   switch (input.gait_mode) {
+    // --- TROT MODE ----
+  case GaitMode::Trot: {
+    const double x_home = config_.home_point.x;
+    const double x_fwd = config_.home_point.x + input.step_len;
+    const double z_floor = config_.home_point.z;
+    const double z_peak = config_.home_point.z + input.step_height;
+
+    const double duty_factor =
+        input.stance_duration / (input.stance_duration + input.swing_duration);
+
+    // --- Stance Phase ---
+    if (limb_phase < duty_factor) {
+      const double t = limb_phase / duty_factor;
+      target.x = lerp(x_fwd, x_home, t);
+      target.z = z_floor;
+    }
+    // --- Swing Phase ----
+    else {
+      const double t = (limb_phase - duty_factor) / (1 - duty_factor);
+      target.x = bezier(x_home, x_home, x_fwd, x_fwd, t);
+      target.z = bezier(z_floor, z_peak, z_peak, z_floor, t);
+    }
+    target.y = config_.home_point.y;
+    break;
+  }
+    // --- STAND MODE ---
   case GaitMode::Stand:
-  default:
+  default: {
     target = config_.home_point;
     break;
+  }
   }
 
   return target;

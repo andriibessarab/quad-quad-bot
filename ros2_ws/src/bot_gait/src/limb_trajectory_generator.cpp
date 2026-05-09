@@ -7,6 +7,7 @@
 #include "rclcpp/timer.hpp"
 
 #include <chrono>
+#include <cmath>
 #include <memory>
 #include <string>
 #include <vector>
@@ -27,8 +28,7 @@ const std::string
 class LimbTrajectoryGenerator : public rclcpp::Node {
 public:
   LimbTrajectoryGenerator()
-      : Node(GAIT_PLANNER_NODE_NAME),
-        gait_state_(bot_math::GaitMode::Stand) {
+      : Node(GAIT_PLANNER_NODE_NAME), gait_state_(bot_math::GaitMode::Trot) {
     // get params
     try {
       control_loop_frequency_ =
@@ -50,8 +50,9 @@ public:
       throw e; // kill the node
     }
 
-      // init math helpers
+    // init math helpers
     create_limb_trajectories();
+    gait_start_time_ = this->now();
 
     // setup target publishers
     this->create_target_publishers();
@@ -67,14 +68,22 @@ private:
   void control_loop() {
     bot_math::LimbTrajectoryInput input;
     input.gait_mode = gait_state_;
-    input.global_phase = 0.0;
-    input.step_len = 0.0;
-    input.step_height = 0.0;
-    input.swing_duration = 0.0;
-    input.stance_duration = 0.0;
+    input.step_len = 0.025;
+    input.step_height = 0.025;
+    input.swing_duration = 0.4;
+    input.stance_duration = 0.75;
+
+    const double elapsed = (this->now() - gait_start_time_).seconds();
+    const double gait_cycle_duration =
+        input.swing_duration + input.stance_duration;
+    input.global_phase = std::fmod(elapsed / gait_cycle_duration, 1.0);
+    if (input.global_phase < 0.0) {
+      input.global_phase += 1.0;
+    }
 
     for (size_t i = 0; i < limb_trajectories_.size(); ++i) {
-      geometry_msgs::msg::Point target = limb_trajectories_[i].compute_target(input);
+      geometry_msgs::msg::Point target =
+          limb_trajectories_[i].compute_target(input);
       target_publishers_[i]->publish(target);
     }
   }
@@ -91,7 +100,11 @@ private:
       config.home_point = home_point_;
 
       //// TODO TEMP ////
-      config.phase_offset = (i % 2 == 0) ? 0.0 : 0.5;
+      if (prefix == "fl" || prefix == "br") {
+        config.phase_offset = 0.0;
+      } else {
+        config.phase_offset = 0.5;
+      }
 
       limb_trajectories_.emplace_back(config);
     }
@@ -111,6 +124,7 @@ private:
 
   // instance vars
   rclcpp::TimerBase::SharedPtr timer_;
+  rclcpp::Time gait_start_time_;
   bot_math::GaitMode gait_state_;
   std::vector<bot_math::LimbTrajectory> limb_trajectories_;
   std::vector<rclcpp::Publisher<geometry_msgs::msg::Point>::SharedPtr>
