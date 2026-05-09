@@ -3,7 +3,7 @@
 
 #include <vector>
 
-namespace bot_kinematics {
+namespace bot_math {
 
 /**
  * @brief Physical dimensions of a single quadruped limb.
@@ -29,6 +29,6 @@ struct LimbJointAngles {
     ;
   }
 };
-} // namespace bot_kinematics
+} // namespace bot_math
 
 #endif
