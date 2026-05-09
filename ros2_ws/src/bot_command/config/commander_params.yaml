@@ -10,19 +10,19 @@ locomotion_commander:
       - fl
       - br
       - bl
-    limb_inversions:  # arrays specify which directions need inversion
+    limb_info:  # needed to account for inversions
       fr:
-        invert_x: true   # makes fwd +ve
-        invert_y: false  # makes left +ve
+        is_right: true
+        is_back: false
       fl:
-        invert_x: false
-        invert_y: false
+        is_right: false
+        is_back: false
       br:
-        invert_x: true
-        invert_y: true
+        is_right: true
+        is_back: true
       bl:
-        invert_x: false
-        invert_y: true
+        is_right: false
+        is_back: true
     l1_len: 0.02088  # hip offset (m)
     l2_len: 0.046  # femur length (m)
     l3_len: 0.048  # tibia Length (m)

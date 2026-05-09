@@ -19,9 +19,9 @@ const std::string LOCOMOTION_COMMANDER_NODE_NAME = "locomotion_commander";
 
 // param names
 const std::string LIMB_PREFIXES_PARAM_NAME = "limb_prefixes";
-const std::string LIMB_INVERSIONS_PARAM_NAME = "limb_inversions";
-const std::string INVERT_X_PARAM_NAME = "invert_x";
-const std::string INVERT_Y_PARAM_NAME = "invert_y";
+const std::string LIMB_INFO_PARAM_NAME = "limb_info";
+const std::string IS_RIGHT_PARAM_NAME = "is_right";
+const std::string IS_BACK_PARAM_NAME = "is_back";
 const std::string JOINTS_PARAM_NAME = "joints";
 const std::string L1_PARAM_NAME = "l1_len";
 const std::string L2_PARAM_NAME = "l2_len";
@@ -52,17 +52,15 @@ public:
       this->limbs_count_ = limb_prefixes_.size();
       this->joints_count_ = joints_.size();
 
-      // store limb inversions
+      // store limb info
       this->limb_info_.reserve(this->limbs_count_);
       for (int i = 0; i < this->limbs_count_; ++i) {
         limb_info info;
         const std::string &prefix = this->limb_prefixes_[i];
-        info.invert_x =
-            this->declare_parameter<bool>(LIMB_INVERSIONS_PARAM_NAME + "." +
-                                          prefix + "." + INVERT_X_PARAM_NAME);
-        info.invert_y =
-            this->declare_parameter<bool>(LIMB_INVERSIONS_PARAM_NAME + "." +
-                                          prefix + "." + INVERT_Y_PARAM_NAME);
+        info.is_right = this->declare_parameter<bool>(
+            LIMB_INFO_PARAM_NAME + "." + prefix + "." + IS_RIGHT_PARAM_NAME);
+        info.is_back = this->declare_parameter<bool>(
+            LIMB_INFO_PARAM_NAME + "." + prefix + "." + IS_BACK_PARAM_NAME);
         this->limb_info_.push_back(info);
       }
 
@@ -110,11 +108,11 @@ public:
   }
 
   /**
-   * Stores limb inversions needed to make fwd and left +ve joint directions.
+   * Stores info needed to perform appropriate inversions
    */
   struct limb_info {
-    bool invert_x;
-    bool invert_y;
+    bool is_right;
+    bool is_back;
   };
 
 private:
@@ -124,8 +122,13 @@ private:
    * */
   void target_callback(int prefix_index,
                        const geometry_msgs::msg::Point::SharedPtr msg) {
+
+    // fetch limb info
+    const auto &limb_info = this->limb_info_.at(prefix_index);
+
     // extract cart coords from msg
-    double x = msg->x;
+    double x =
+        limb_info.is_back ? -msg->x : msg->x; // invert x for right-side limbs
     double y = msg->y;
     double z = msg->z;
 
@@ -136,8 +139,14 @@ private:
     // update command
     auto vec = joint_angles.to_vector();
     int start_index = prefix_index * this->joints_count_;
-    this->joint_command_.data[start_index] = vec[0];
+
+    // HAA
+    // invert output if back limb
+    this->joint_command_.data[start_index] =
+        limb_info.is_right ? -vec[0] : vec[0];
+    // HFE
     this->joint_command_.data[start_index + 1] = vec[1];
+    // KFE
     this->joint_command_.data[start_index + 2] = vec[2];
   }
 
