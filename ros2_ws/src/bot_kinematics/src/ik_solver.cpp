@@ -65,10 +65,10 @@ LimbJointAngles IkSolver::calculate_ik(double target_x, double target_y,
   double phi_arg = (l3 * l3 - l2 * l2 - B * B) / (-2 * l2 * B);
   phi_arg = std::clamp(phi_arg, -1.0, 1.0);
   double phi = std::acos(phi_arg);
-  angles.hfe = rho + phi;
+  angles.hfe = rho - phi;
   double kfe_arg = (B * B - l2 * l2 - l3 * l3) / (-2 * l2 * l3);
   kfe_arg = std::clamp(kfe_arg, -1.0, 1.0);
-  angles.kfe = M_PI - std::acos(kfe_arg);
+  angles.kfe = std::acos(kfe_arg) - M_PI;
 
   return angles;
 }
