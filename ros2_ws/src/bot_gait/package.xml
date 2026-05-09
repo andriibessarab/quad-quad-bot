@@ -11,6 +11,7 @@
 
     <depend>geometry_msgs</depend>
     <depend>rclcpp</depend>
+    <depend>bot_math</depend>
 
     <exec_depend>ament_index_python</exec_depend>
     <exec_depend>launch</exec_depend>
