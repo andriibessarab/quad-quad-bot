@@ -1,5 +1,5 @@
-#ifndef BOT_KINEMATICS_TYPES_HPP
-#define BOT_KINEMATICS_TYPES_HPP
+#ifndef BOT_MATH_TYPES_HPP
+#define BOT_MATH_TYPES_HPP
 
 #include <vector>
 

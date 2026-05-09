@@ -1,5 +1,5 @@
-#ifndef BOT_KINEMATICS_IK_SOLVER_HPP
-#define BOT_KINEMATICS_IK_SOLVER_HPP
+#ifndef BOT_MATH_IK_SOLVER_HPP
+#define BOT_MATH_IK_SOLVER_HPP
 
 #include "bot_math/types.hpp"
 
