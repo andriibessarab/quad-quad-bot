@@ -1,3 +1,4 @@
+#include "bot_math/limb_trajectory.hpp"
 #include "geometry_msgs/msg/point.hpp"
 #include "rclcpp/exceptions.hpp"
 #include "rclcpp/publisher.hpp"
@@ -8,28 +9,38 @@
 #include <chrono>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace bot_gait {
 // param names
 const std::string CONTROL_LOOP_FREQUENCY_PARAM_NAME("control_loop_frequency");
-const std::string SWING_DURATION_PARAM_NAME("swing_duration");
-const std::string STANCE_DURATION_PARAM_NAME("stance_duration");
+const std::string LIMB_PREFIXES_PARAM_NAME("limb_prefixes");
+const std::string HOME_X_PARAM_NAME("home_x");
+const std::string HOME_Y_PARAM_NAME("home_y");
+const std::string HOME_Z_PARAM_NAME("home_z");
 
 // other consts
+const std::string GAIT_PLANNER_NODE_NAME("gait_planner");
 const std::string
     TARGET_TOPIC_NAME("target"); // must match in limb_commander.cpp
 
 class LimbTrajectoryGenerator : public rclcpp::Node {
 public:
-  LimbTrajectoryGenerator() : Node("limb_trajectory_generator") {
+  LimbTrajectoryGenerator()
+      : Node(GAIT_PLANNER_NODE_NAME),
+        gait_state_(bot_math::GaitMode::Stand) {
     // get params
     try {
       control_loop_frequency_ =
           this->declare_parameter<double>(CONTROL_LOOP_FREQUENCY_PARAM_NAME);
-      swing_duration_ =
-          this->declare_parameter<double>(SWING_DURATION_PARAM_NAME);
-      stance_duration_ =
-          this->declare_parameter<double>(STANCE_DURATION_PARAM_NAME);
+      limb_prefixes_ = this->declare_parameter<std::vector<std::string>>(
+          LIMB_PREFIXES_PARAM_NAME);
+
+      // home point
+      home_point_.x = this->declare_parameter<double>(HOME_X_PARAM_NAME);
+      home_point_.y = this->declare_parameter<double>(HOME_Y_PARAM_NAME);
+      home_point_.z = this->declare_parameter<double>(HOME_Z_PARAM_NAME);
+
     } catch (
         const rclcpp::exceptions::UninitializedStaticallyTypedParameterException
             &e) {
@@ -39,14 +50,11 @@ public:
       throw e; // kill the node
     }
 
-    // setup target publisher
-    target_publisher_ =
-        this->create_publisher<geometry_msgs::msg::Point>(TARGET_TOPIC_NAME, 1);
+      // init math helpers
+    create_limb_trajectories();
 
-    /////////temp//////////
-    this->phase_start_time_ = this->now(); // start phaze on launch
-    this->leg_state_ = STAND;
-    ///////////////////////
+    // setup target publishers
+    this->create_target_publishers();
 
     // run control loop at set hz
     this->timer_ = this->create_wall_timer(
@@ -57,97 +65,61 @@ public:
 
 private:
   void control_loop() {
-    auto now = this->now();
-    double elapsed = (now - phase_start_time_).seconds();
+    bot_math::LimbTrajectoryInput input;
+    input.gait_mode = gait_state_;
+    input.global_phase = 0.0;
+    input.step_len = 0.0;
+    input.step_height = 0.0;
+    input.swing_duration = 0.0;
+    input.stance_duration = 0.0;
 
-    // determine current duration and check for state transitions
-    double current_duration =
-        (leg_state_ == SWING) ? swing_duration_ : stance_duration_;
-    if (leg_state_ == STAND)
-      current_duration = 5.0;
-
-    // check if need to transition to next stage
-    if (elapsed >= current_duration) {
-      if (leg_state_ == STAND || leg_state_ == STANCE) {
-        leg_state_ = SWING;
-      } else {
-        leg_state_ = STANCE;
-      }
-
-      // reset for the new phase
-      phase_start_time_ = now;
-      elapsed = 0.0;
-      current_duration =
-          (leg_state_ == SWING) ? swing_duration_ : stance_duration_;
+    for (size_t i = 0; i < limb_trajectories_.size(); ++i) {
+      geometry_msgs::msg::Point target = limb_trajectories_[i].compute_target(input);
+      target_publishers_[i]->publish(target);
     }
-
-    // calculate phase [0.0, 1.0]
-    double t = elapsed / current_duration;
-    geometry_msgs::msg::Point msg;
-    msg.y = 0.02088; // keep Y constant everywhere for now
-
-    /////////temp//////////
-    const double x_home = -0.012;
-    const double x_fwd = 0.024;
-    const double z_floor = -0.078;
-    const double z_peak = -0.046;
-    ///////////////////////
-
-    switch (this->leg_state_) {
-    case STAND:
-      msg.x = x_home;
-      msg.z = z_floor;
-      break;
-
-    case SWING:
-      // get points on bezier curves for current state
-      msg.x = bezier(x_home, x_home, x_fwd, x_fwd, t);
-      msg.z = bezier(z_floor, z_peak, z_peak, z_floor, t);
-      break;
-
-    case STANCE:
-      double s = t * t * (3.0 - 2.0 * t); // smoothstep for traction
-      msg.x = lerp(x_fwd, x_home, s);     // position in horiz. line using lerp
-      msg.z = z_floor;
-      break;
-    }
-
-    // publish point (for commander)
-    target_publisher_->publish(msg);
   }
 
   /**
-   * @brief Evaluates a 1D cubic Bezier curve for swing-phase trajectory
-   * shaping.
-   *
-   * @param p0 Curve value at the start of swing.
-   * @param p1 First intermediate control value that shapes lift-off.
-   * @param p2 Second intermediate control value that shapes touch-down.
-   * @param p3 Curve value at the end of swing.
-   * @param t Normalized swing phase in the range [0, 1].
-   * @return Interpolated curve value at phase `t`.
+   * Creates trajectory objects for all limbs.
    */
-  double bezier(double p0, double p1, double p2, double p3, double t) {
-    double inv_t = 1.0 - t;
-    return (inv_t * inv_t * inv_t * p0) + (3.0 * inv_t * inv_t * t * p1) +
-           (3.0 * inv_t * t * t * p2) + (t * t * t * p3);
+  void create_limb_trajectories() {
+    limb_trajectories_.reserve(limb_prefixes_.size());
+    for (size_t i = 0; i < limb_prefixes_.size(); ++i) {
+      const auto &prefix = limb_prefixes_[i];
+      bot_math::LimbTrajectoryConfig config;
+      config.name = prefix;
+      config.home_point = home_point_;
+
+      //// TODO TEMP ////
+      config.phase_offset = (i % 2 == 0) ? 0.0 : 0.5;
+
+      limb_trajectories_.emplace_back(config);
+    }
   }
 
-  double lerp(double start, double end, double t) {
-    return start + t * (end - start);
+  /**
+   * Creates publishers for all limb target topics.
+   */
+  void create_target_publishers() {
+    target_publishers_.reserve(limb_prefixes_.size());
+    for (const auto &prefix : limb_prefixes_) {
+      target_publishers_.push_back(
+          this->create_publisher<geometry_msgs::msg::Point>(
+              prefix + "/" + TARGET_TOPIC_NAME, 1));
+    }
   }
 
   // instance vars
   rclcpp::TimerBase::SharedPtr timer_;
-  rclcpp::Time phase_start_time_;
-  enum LegState { STAND, SWING, STANCE } leg_state_ = STAND;
-  rclcpp::Publisher<geometry_msgs::msg::Point>::SharedPtr target_publisher_;
+  bot_math::GaitMode gait_state_;
+  std::vector<bot_math::LimbTrajectory> limb_trajectories_;
+  std::vector<rclcpp::Publisher<geometry_msgs::msg::Point>::SharedPtr>
+      target_publishers_;
 
   // params
   double control_loop_frequency_;
-  double swing_duration_;
-  double stance_duration_;
-  std::string target_topic_;
+  std::vector<std::string> limb_prefixes_;
+  geometry_msgs::msg::Point home_point_;
 };
 } // namespace bot_gait
 
