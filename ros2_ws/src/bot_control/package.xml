@@ -3,12 +3,20 @@
 <package format="3">
     <name>bot_control</name>
     <version>0.0.1</version>
-    <description>Quad-Quad Bot Control Code</description>
+    <description>Quad-Quad Bot Control, Command, and Gait Planner Code</description>
     <maintainer email="contact@andriibessarab.com">Andrii Bessarab</maintainer>
     <license>Apache-2.0</license>
 
     <buildtool_depend>ament_cmake</buildtool_depend>
 
+    <depend>rclcpp</depend>
+    <depend>std_msgs</depend>
+    <depend>geometry_msgs</depend>
+    <depend>bot_math</depend>
+
+    <exec_depend>ament_index_python</exec_depend>
+    <exec_depend>launch</exec_depend>
+    <exec_depend>launch_ros</exec_depend>
     <exec_depend>controller_manager</exec_depend>
     <exec_depend>gz_ros2_control</exec_depend>
     <exec_depend>joint_state_broadcaster</exec_depend>

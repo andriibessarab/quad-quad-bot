@@ -5,7 +5,6 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import Command
 from launch_ros.actions import Node
 
 
@@ -19,10 +18,6 @@ def generate_launch_description():
     resource_path = str(Path(pkg_bot_description).parent)  # where gazebo looks for package names
     pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
 
-    # Process the Xacro file
-    xacro_file = os.path.join(pkg_bot_description, "urdf", "robot.urdf.xacro")
-    robot_desc_content = Command(["xacro ", xacro_file, " sim:=true"])
-
     # Set GZ_SIM_RESOURCE_PATH so Gazebo can find meshes/models
     set_gz_path = SetEnvironmentVariable(
         name="GZ_SIM_RESOURCE_PATH",
@@ -35,34 +30,12 @@ def generate_launch_description():
         launch_arguments=[("gz_args", "-r empty.sdf")],
     )
 
-    # Robot State Publisher
-    rsp_node = Node(
-        package="robot_state_publisher",
-        executable="robot_state_publisher",
-        output="screen",
-        parameters=[{"robot_description": robot_desc_content, "use_sim_time": True}],
-    )
-
     # Spawn robot into Gazebo
     spawn_node = Node(
         package="ros_gz_sim",
         executable="create",
         arguments=["-topic", "robot_description", "-name", "quad_limb", "-z", "0.1"],
         output="screen",
-    )
-
-    # Spawn joint state broadcaster
-    load_jsb = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_state_broadcaster"],
-    )
-
-    # Spawn trajectory controller
-    load_jtc = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["joint_group_position_controller"],
     )
 
     # Bridge the clock so ROS 2 and Gazebo stay in sync
@@ -73,6 +46,4 @@ def generate_launch_description():
         output="screen",
     )
 
-    return LaunchDescription(
-        [set_gz_path, gazebo, rsp_node, spawn_node, load_jsb, load_jtc, clock_bridge]
-    )
+    return LaunchDescription([set_gz_path, gazebo, spawn_node, clock_bridge])

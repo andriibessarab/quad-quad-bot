@@ -1,9 +1,9 @@
-#ifndef BOT_KINEMATICS_IK_SOLVER_HPP
-#define BOT_KINEMATICS_IK_SOLVER_HPP
+#ifndef BOT_MATH_IK_SOLVER_HPP
+#define BOT_MATH_IK_SOLVER_HPP
 
-#include "bot_kinematics/types.hpp"
+#include "bot_math/types.hpp"
 
-namespace bot_kinematics {
+namespace bot_math {
 class IkSolver {
 public:
   /**
@@ -26,6 +26,6 @@ private:
   /// Stored physical constants for the limb
   const LimbDimensions limb_dimensions_;
 };
-} // namespace bot_kinematics
+} // namespace bot_math
 
 #endif
