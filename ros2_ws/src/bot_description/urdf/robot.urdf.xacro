@@ -7,9 +7,9 @@
     <xacro:arg name="hardware_plugin" default="mock_components/GenericSystem"/>
 
     <!-- Common leg placement/orientation values -->
-    <xacro:property name="leg_x" value="0.0765"/>
-    <xacro:property name="leg_y" value="-0.009"/>
-    <xacro:property name="leg_z" value="0.0338"/>
+    <xacro:property name="leg_x" value="-0.04991"/>
+    <xacro:property name="leg_y" value="-0.0056409"/>
+    <xacro:property name="leg_z" value="-0.066876"/>
     <xacro:property name="leg_pitch" value="1.5708"/>
     <xacro:property name="leg_roll_flip" value="3.1416"/>
 

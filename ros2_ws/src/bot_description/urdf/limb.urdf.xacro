@@ -10,130 +10,70 @@
         <!-- Links -->
         <link name="${prefix}shoulder_link">
             <inertial>
-                <origin xyz="0.018766 0.016329 0.0079907" rpy="0 0 0"/>
-                <mass value="0.01481"/>
-                <inertia ixx="1.3996E-06" ixy="-1.6833E-08" ixz="-7.906E-10" iyy="1.8819E-06" iyz="-3.0123E-10"
-                         izz="2.5913E-06"/>
+                <origin xyz="0.00123926352361432 0.00335245027216135 0.020963936804564" rpy="0 0 0" />
+                <mass value="0.0703942212311305" />
+                <inertia ixx="2.76576288052366E-05" ixy="-1.39471839648609E-07" ixz="-2.88488463706858E-07"
+                         iyy="1.71370747114446E-05" iyz="-6.19746545161347E-08" izz="2.60685249875832E-05" />
             </inertial>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
-                    <mesh filename="package://bot_description/meshes/haa_horn.STL" scale="1 1 1"/>
+                    <mesh filename="package://bot_description/meshes/shoulder_link.STL" />
                 </geometry>
-                <material name="joint_horn_accent">
-                    <color rgba="0.95 0.65 0.20 1.0"/>
-                </material>
-            </visual>
-            <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/shoulder_casing.STL" scale="1 1 1"/>
-                </geometry>
-                <material name="shoulder_plastic">
-                    <color rgba="0.55 0.62 0.72 1.0"/>
-                </material>
-            </visual>
-            <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/hfe_servo.STL" scale="1 1 1"/>
-                </geometry>
-                <material name="motor_dark_gray">
-                    <color rgba="0.20 0.20 0.22 1.0"/>
+                <material name="">
+                    <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
                 </material>
             </visual>
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
-                    <mesh filename="package://bot_description/meshes/haa_horn.STL" scale="1 1 1"/>
-                </geometry>
-            </collision>
-            <collision>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/shoulder_casing.STL" scale="1 1 1"/>
-                </geometry>
-            </collision>
-            <collision>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/hfe_servo.STL" scale="1 1 1"/>
+                    <mesh filename="package://bot_description/meshes/shoulder_link.STL" scale="1 1 1"/>
                 </geometry>
             </collision>
         </link>
         <link name="${prefix}femur_link">
             <inertial>
-                <origin xyz="0.012387 -0.00071898 0.017314" rpy="0 0 0"/>
-                <mass value="0.015915"/>
-                <inertia ixx="9.3139E-07" ixy="-7.9194E-10" ixz="-9.4792E-08" iyy="3.7356E-06" iyz="1.3143E-09"
-                         izz="3.3585E-06"/>
+                <origin xyz="0.0219749723740116 1.10674379296058E-05 0.0317318417810033" rpy="0 0 0" />
+                <mass value="0.0578650759594537" />
+                <inertia ixx="7.21606846133888E-06" ixy="-2.43047276138592E-09" ixz="-8.71808476080296E-07"
+                         iyy="3.86361231869082E-05" iyz="-9.13958901614113E-10" izz="3.73315278091681E-05" />
             </inertial>
             <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://bot_description/meshes/hfe_horn.STL" scale="1 1 1"/>
+                    <mesh filename="package://bot_description/meshes/femur_link.STL" />
                 </geometry>
-                <material name="joint_horn_accent">
-                    <color rgba="0.95 0.65 0.20 1.0"/>
-                </material>
-            </visual>
-            <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/femur.STL" scale="1 1 1"/>
-                </geometry>
-                <material name="femur_plastic">
-                    <color rgba="0.52 0.69 0.84 1.0"/>
-                </material>
-            </visual>
-            <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/kfe_servo.STL" scale="1 1 1"/>
-                </geometry>
-                <material name="motor_dark_gray">
-                    <color rgba="0.20 0.20 0.22 1.0"/>
+                <material name="">
+                    <color rgba="0.96078431372549 0.96078431372549 0.964705882352941 1" />
                 </material>
             </visual>
             <collision>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://bot_description/meshes/hfe_horn.STL" scale="1 1 1"/>
-                </geometry>
-            </collision>
-            <collision>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/femur.STL" scale="1 1 1"/>
-                </geometry>
-            </collision>
-            <collision>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/kfe_servo.STL" scale="1 1 1"/>
+                    <mesh filename="package://bot_description/meshes/femur_link.STL" />
                 </geometry>
             </collision>
         </link>
         <link name="${prefix}tibia_link">
             <inertial>
-                <origin xyz="0.0019117 0.036934 -0.0058072" rpy="0 0 0"/>
-                <mass value="0.052333"/>
-                <inertia ixx="3.6178E-05" ixy="3.873E-06" ixz="-6.0786E-07" iyy="2.0314E-05" iyz="6.2224E-06"
-                         izz="2.4513E-05"/>
+                <origin xyz="0.031878867699759 5.86889321863016E-11 1.81508030133726E-08" rpy="0 0 0" />
+                <mass value="0.0109091234821787" />
+                <inertia ixx="1.95526217620308E-07" ixy="1.4570117043835E-11" ixz="1.85497777908555E-11"
+                         iyy="1.01874475115624E-05" iyz="-4.19910780669847E-12" izz="1.01972686884836E-05" />
             </inertial>
             <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <origin xyz="0 0 0" rpy="0 0 0" />
                 <geometry>
-                    <mesh filename="package://bot_description/meshes/tibia.STL" scale="1 1 1"/>
+                    <mesh filename="package://bot_description/meshes/tibia_link.STL" />
                 </geometry>
-                <material name="tibia_plastic">
-                    <color rgba="0.56 0.78 0.62 1.0"/>
+                <material name="">
+                    <color rgba="0.545098039215686 0.615686274509804 0.858823529411765 1" />
                 </material>
             </visual>
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
-                    <mesh filename="package://bot_description/meshes/tibia.STL" scale="1 1 1"/>
+                    <mesh filename="package://bot_description/meshes/tibia_link.STL" scale="1 1 1"/>
                 </geometry>
             </collision>
         </link>
