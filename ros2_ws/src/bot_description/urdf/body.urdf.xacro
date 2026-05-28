@@ -6,33 +6,33 @@
         <link name="base_link"/>
         <link name="body_link">
             <inertial>
-                <origin xyz="0.0003026 -0.033305 -0.00066994" rpy="0 0 0"/>
-                <mass value="0.33425"/>
-                <inertia ixx="0.00022631" ixy="1.6841E-06" ixz="2.4325E-07" iyy="0.00068307" iyz="-2.2508E-06"
-                         izz="0.00051261"/>
-            </inertial>
-            <visual>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/body.STL"/>
-                </geometry>
-                <material name="body_plastic">
-                    <color rgba="0.65 0.70 0.75 1.0"/>
-                </material>
-            </visual>
-            <collision>
-                <origin xyz="0 0 0" rpy="0 0 0"/>
-                <geometry>
-                    <mesh filename="package://bot_description/meshes/body.STL"/>
-                </geometry>
-            </collision>
+                    <origin xyz="0.010253 -0.021653 -0.00076856" rpy="0 0 0" />
+                    <mass value="0.60969" />
+                    <inertia ixx="0.00097469" ixy="7.6657E-05" ixz="5.131E-06" iyy="0.0038736" iyz="-2.4748E-06"
+                             izz="0.0031856" />
+                </inertial>
+                <visual>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <mesh filename="package://chassis_sub.SLDASM/meshes/chassis_link.STL" />
+                    </geometry>
+                    <material name="">
+                        <color rgba="0.5451 0.61569 0.85882 1" />
+                    </material>
+                </visual>
+                <collision>
+                    <origin xyz="0 0 0" rpy="0 0 0" />
+                    <geometry>
+                        <mesh filename="package://bot_description/meshes/chassis_link.STL" />
+                    </geometry>
+                </collision>
         </link>
 
         <!-- Joints -->
         <joint name="base_to_body" type="fixed">
             <parent link="base_link"/>
             <child link="body_link"/>
-            <origin xyz="0 0 0" rpy="-1.5708 0 0"/>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
         </joint>
     </xacro:macro>
 </robot>
