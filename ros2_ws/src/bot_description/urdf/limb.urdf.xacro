@@ -89,7 +89,13 @@
         </link>
 
         <joint name="${prefix}hfe_joint" type="revolute">
-            <origin xyz="0.0298000000000001 -0.0124999999999999 0.0214999999999999" rpy="-1.5707963267949 0 -1.5707963267949"/>
+            <xacro:if value="${inverted_shoulder}">
+                <origin xyz="0.0298000000000001 -0.0124999999999999 -0.0214999999999999" rpy="-1.5707963267949 0 -1.5707963267949"/>
+            </xacro:if>
+            <xacro:unless value="${inverted_shoulder}">
+                <origin xyz="0.0298000000000001 -0.0124999999999999 0.0214999999999999" rpy="-1.5707963267949 0 -1.5707963267949"/>
+            </xacro:unless>
+
             <parent link="${prefix}shoulder_link"/>
             <child link="${prefix}femur_link"/>
             <axis xyz="0 0 1"/>
