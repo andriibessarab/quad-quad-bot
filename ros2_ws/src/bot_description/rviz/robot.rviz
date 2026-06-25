@@ -49,21 +49,6 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        bl_femur_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        bl_shoulder_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        bl_tibia_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         body_link:
           Alpha: 1
           Show Axes: false
@@ -95,21 +80,6 @@ Visualization Manager:
           Show Trail: false
           Value: true
         fl_tibia_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fr_femur_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fr_shoulder_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        fr_tibia_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -157,25 +127,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 0.33099350333213806
+      Distance: 0.5845262408256531
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0
-        Y: 0
-        Z: 0
+        X: 0.0865919217467308
+        Y: -0.037240881472826004
+        Z: 0.004544422961771488
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.27039843797683716
+      Pitch: 0.07479771971702576
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 0.940398097038269
+      Yaw: 3.158510208129883
     Saved: ~
 Window Geometry:
   Displays:

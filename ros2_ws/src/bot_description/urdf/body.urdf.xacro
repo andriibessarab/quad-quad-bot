@@ -6,24 +6,24 @@
         <link name="base_link"/>
         <link name="body_link">
             <inertial>
-                    <origin xyz="0.010253 -0.021653 -0.00076856" rpy="0 0 0" />
-                    <mass value="0.60969" />
-                    <inertia ixx="0.00097469" ixy="7.6657E-05" ixz="5.131E-06" iyy="0.0038736" iyz="-2.4748E-06"
-                             izz="0.0031856" />
+                    <origin xyz="-0.000889242251136346 0.00065866860454622 0.0252390940732559" rpy="0 0 0" />
+                    <mass value="0.482255179604208" />
+                    <inertia ixx="0.000590030011142084" ixy="1.74833019226649E-07" ixz="1.21790430692212E-05"
+                             iyy="0.000652273135047948" iyz="5.42047268018053E-08" izz="0.000968313234449169" />
                 </inertial>
                 <visual>
                     <origin xyz="0 0 0" rpy="0 0 0" />
                     <geometry>
-                        <mesh filename="package://chassis_sub.SLDASM/meshes/chassis_link.STL" />
+                        <mesh filename="package://bot_description/meshes/body_link.STL" />
                     </geometry>
                     <material name="">
-                        <color rgba="0.5451 0.61569 0.85882 1" />
+                        <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
                     </material>
                 </visual>
                 <collision>
                     <origin xyz="0 0 0" rpy="0 0 0" />
                     <geometry>
-                        <mesh filename="package://bot_description/meshes/chassis_link.STL" />
+                        <mesh filename="package://bot_description/meshes/body_link.STL" />
                     </geometry>
                 </collision>
         </link>
