@@ -1,3 +1,0 @@
-shoulder: 29.8mm
-femur: 96.06mm
-tibia: 97.5mm
