@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="chassis_sub.SLDASM">
+  <link
+    name="body_link">
+    <inertial>
+      <origin
+        xyz="-0.00088924 0.00065867 0.025239"
+        rpy="0 0 0" />
+      <mass
+        value="0.48226" />
+      <inertia
+        ixx="0.00059003"
+        ixy="1.7483E-07"
+        ixz="1.2179E-05"
+        iyy="0.00065227"
+        iyz="5.4205E-08"
+        izz="0.00096831" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://chassis_sub.SLDASM/meshes/body_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://chassis_sub.SLDASM/meshes/body_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="shoulder_link">
+    <inertial>
+      <origin
+        xyz="-0.056659 -0.0032609 -0.081911"
+        rpy="0 0 0" />
+      <mass
+        value="0.48226" />
+      <inertia
+        ixx="0.003376"
+        ixy="-2.46E-06"
+        ixz="-5.5591E-07"
+        iyy="0.004088"
+        iyz="-6.7094E-05"
+        izz="0.0010213" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://chassis_sub.SLDASM/meshes/shoulder_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://chassis_sub.SLDASM/meshes/shoulder_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="haa_joint"
+    type="revolute">
+    <origin
+      xyz="-0.0828 -0.0559999999999999 0.0285"
+      rpy="1.5707963267949 0 -1.5707963267949" />
+    <parent
+      link="body_link" />
+    <child
+      link="shoulder_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>
