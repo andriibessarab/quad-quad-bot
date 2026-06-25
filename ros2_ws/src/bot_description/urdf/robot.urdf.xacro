@@ -6,12 +6,13 @@
     <!-- Hardware args -->
     <xacro:arg name="hardware_plugin" default="mock_components/GenericSystem"/>
 
-    <!-- Common leg placement/orientation values -->
-    <xacro:property name="leg_x" value="-0.04991"/>
-    <xacro:property name="leg_y" value="-0.0056409"/>
-    <xacro:property name="leg_z" value="-0.066876"/>
-    <xacro:property name="leg_pitch" value="1.5708"/>
-    <xacro:property name="leg_roll_flip" value="3.1416"/>
+    <!-- Common leg placement/orientation values (from chassis_sub.SLDASM export, single reference limb) -->
+    <xacro:property name="leg_x" value="-0.0828"/>
+    <xacro:property name="leg_y" value="-0.056"/>
+    <xacro:property name="leg_z" value="0.0285"/>
+    <xacro:property name="leg_roll" value="1.5708"/>
+    <xacro:property name="leg_pitch" value="0"/>
+    <xacro:property name="leg_yaw" value="-1.5708"/>
 
     <!-- Import macros from other files -->
     <xacro:include filename="$(find bot_description)/urdf/body.urdf.xacro"/>
@@ -21,13 +22,11 @@
 
     <!-- Call macros -->
     <xacro:body/>
-    <xacro:limb prefix="fr" x="${leg_x}" y="${leg_y}" z="${-leg_z}" r="0" p="${leg_pitch}" yw="0" mult="1"/>
-    <xacro:limb prefix="fl" x="${leg_x}" y="${leg_y}" z="${leg_z}" r="${leg_roll_flip}" p="${-leg_pitch}" yw="0"
-                mult="-1"/>
-    <xacro:limb prefix="br" x="${-leg_x}" y="${leg_y}" z="${-leg_z}" r="${leg_roll_flip}" p="${leg_pitch}" yw="0"
-                mult="-1"/>
-    <xacro:limb prefix="bl" x="${-leg_x}" y="${leg_y}" z="${leg_z}" r="0" p="${-leg_pitch}" yw="0" mult="1"/>
-    <!-- macros specific to sim/hardware modes -->
+    <xacro:limb prefix="fl" x="${leg_x}"  y="${leg_y}"  z="${leg_z}" r="${leg_roll}" p="${leg_pitch}" yw="${leg_yaw}"  inverted_shoulder="false"/>
+    <xacro:limb prefix="fr" x="${leg_x}"  y="${-leg_y}" z="${leg_z}" r="${leg_roll}" p="${leg_pitch}" yw="${-leg_yaw}" inverted_shoulder="true" />
+    <xacro:limb prefix="bl" x="${-leg_x}" y="${leg_y}"  z="${leg_z}" r="${leg_roll}" p="${leg_pitch}" yw="${leg_yaw}"  inverted_shoulder="true" />
+    <xacro:limb prefix="br" x="${-leg_x}" y="${-leg_y}" z="${leg_z}" r="${leg_roll}" p="${leg_pitch}" yw="${-leg_yaw}" inverted_shoulder="false"/>
+     macros specific to sim/hardware modes
     <xacro:if value="$(arg sim)">
         <xacro:ros2_control name="GazeboSystem" hardware_plugin="gz_ros2_control/GazeboSimSystem"/>
         <xacro:gazebo_ros2_control/>

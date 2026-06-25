@@ -14,9 +14,9 @@
       - bl
 
     # Lengths of shoulder (l1), femur (l2) and tibia (l3) links
-    l1_len: 0.02088  # hip offset (m)
-    l2_len: 0.046  # femur length (m)
-    l3_len: 0.048  # tibia Length (m)
+    l1_len: 0.02980  # hip offset (m)
+    l2_len: 0.09606  # femur length (m)
+    l3_len: 0.09750  # tibia Length (m)
 
     # Home position
     home_x: -0.012
