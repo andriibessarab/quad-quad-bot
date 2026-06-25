@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="limb_sub.SLDASM">
+  <link
+    name="shoulder_link">
+    <inertial>
+      <origin
+        xyz="0.00156778084450622 0.00023011490355522 0.0188653348885318"
+        rpy="0 0 0" />
+      <mass
+        value="0.0668523982562037" />
+      <inertia
+        ixx="2.59076494418216E-05"
+        ixy="-7.12609209313921E-08"
+        ixz="-3.38158087429427E-07"
+        iyy="1.53510229543711E-05"
+        iyz="-2.56253037144619E-08"
+        izz="2.5742400586002E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://limb_sub.SLDASM/meshes/shoulder_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.545098039215686 0.615686274509804 0.858823529411765 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://limb_sub.SLDASM/meshes/shoulder_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="femur_link">
+    <inertial>
+      <origin
+        xyz="0.0273832027524642 -0.00204211137254596 0.0280691114483194"
+        rpy="0 0 0" />
+      <mass
+        value="0.0660310589468222" />
+      <inertia
+        ixx="1.26372174256358E-05"
+        ixy="-2.79354262209908E-09"
+        ixz="-1.19244684545251E-07"
+        iyy="4.86450881022467E-05"
+        iyz="-4.57382172664923E-07"
+        izz="4.44007499741371E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://limb_sub.SLDASM/meshes/femur_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.545098039215686 0.615686274509804 0.858823529411765 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://limb_sub.SLDASM/meshes/femur_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="hfe_joint"
+    type="revolute">
+    <origin
+      xyz="0.0198 -0.0124999999999998 0.0215"
+      rpy="-1.5707963267949 0.0843795007429648 -1.5707963267949" />
+    <parent
+      link="shoulder_link" />
+    <child
+      link="femur_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+  <link
+    name="tibia_link">
+    <inertial>
+      <origin
+        xyz="0.0288498831722294 -2.12695301857191E-07 -1.69859593279753E-07"
+        rpy="0 0 0" />
+      <mass
+        value="0.012227756457296" />
+      <inertia
+        ixx="2.38144473002711E-07"
+        ixy="4.86549409070109E-11"
+        ixz="2.95033296846384E-11"
+        iyy="8.84429570059483E-06"
+        iyz="-1.13332312820773E-11"
+        izz="8.85815361606418E-06" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://limb_sub.SLDASM/meshes/tibia_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.545098039215686 0.615686274509804 0.858823529411765 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://limb_sub.SLDASM/meshes/tibia_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="kfe_joint"
+    type="revolute">
+    <origin
+      xyz="0.096057287853238 0 0.0200000000000001"
+      rpy="-3.14159265358979 0 -0.0843795007429648" />
+    <parent
+      link="femur_link" />
+    <child
+      link="tibia_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="0"
+      upper="0"
+      effort="0"
+      velocity="0" />
+  </joint>
+</robot>
