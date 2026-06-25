@@ -6,19 +6,24 @@
                     value="${xacro.load_yaml('$(find bot_description)/config/joint_limits.yaml')}"/>
 
     <!-- Internal limb geometry + internal joints (hfe/kfe). -->
-    <xacro:macro name="_limb_core" params="prefix mult">
+    <xacro:macro name="_limb_core" params="prefix inverted_shoulder">
         <!-- Links -->
         <link name="${prefix}shoulder_link">
             <inertial>
-                <origin xyz="0.00156778084450622 0.00023011490355522 0.0188653348885318" rpy="0 0 0" />
-                <mass value="0.0668523982562037" />
-                <inertia ixx="2.59076494418216E-05" ixy="-7.12609209313921E-08" ixz="-3.38158087429427E-07"
-                         iyy="1.53510229543711E-05" iyz="-2.56253037144619E-08" izz="2.5742400586002E-05" />
+                <origin xyz="0.00189283967211911 -0.00149022104022392 0.0209651260942884" rpy="0 0 0" />
+                <mass value="0.0772984767866564" />
+                <inertia ixx="2.74184679471754E-05" ixy="-7.12325596084157E-08" ixz="1.19608410119039E-07"
+                         iyy="2.07506136746851E-05" iyz="-2.5629423337733E-08" izz="3.03168099471715E-05" />
             </inertial>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
-                    <mesh filename="package://bot_description/meshes/shoulder_link.STL" />
+                    <xacro:if value="${inverted_shoulder}">
+                        <mesh filename="package://bot_description/meshes/inverted_shoulder_link.STL" scale="0.001 0.001 0.001"/>
+                    </xacro:if>
+                    <xacro:unless value="${inverted_shoulder}">
+                        <mesh filename="package://bot_description/meshes/shoulder_link.STL" scale="1 1 1" />
+                    </xacro:unless>
                 </geometry>
                 <material name="">
                     <color rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
@@ -27,16 +32,21 @@
             <collision>
                 <origin xyz="0 0 0" rpy="0 0 0"/>
                 <geometry>
-                    <mesh filename="package://bot_description/meshes/shoulder_link.STL" scale="1 1 1"/>
+                    <xacro:if value="${inverted_shoulder}">
+                        <mesh filename="package://bot_description/meshes/inverted_shoulder_link.STL" scale="0.001 0.001 0.001"/>
+                    </xacro:if>
+                    <xacro:unless value="${inverted_shoulder}">
+                        <mesh filename="package://bot_description/meshes/shoulder_link.STL" scale="1 1 1"/>
+                    </xacro:unless>
                 </geometry>
             </collision>
         </link>
         <link name="${prefix}femur_link">
             <inertial>
-                <origin xyz="0.0273832027524642 -0.00204211137254596 0.0280691114483194" rpy="0 0 0" />
-                <mass value="0.0660310589468222" />
-                <inertia ixx="1.26372174256358E-05" ixy="-2.79354262209908E-09" ixz="-1.19244684545251E-07"
-                         iyy="4.86450881022467E-05" iyz="-4.57382172664923E-07" izz="4.44007499741371E-05" />
+                <origin xyz="0.0323249229136636 -9.62316571824495E-07 0.0265797029719004" rpy="0 0 0" />
+                <mass value="0.0561441430721167" />
+                <inertia ixx="7.25316608559317E-06" ixy="-2.79260011877617E-09" ixz="-1.19212807601372E-07"
+                         iyy="4.40862958479968E-05" iyz="3.84318283091856E-10" izz="4.29206771962485E-05" />
             </inertial>
             <visual>
                 <origin xyz="0 0 0" rpy="0 0 0" />
@@ -79,10 +89,10 @@
         </link>
 
         <joint name="${prefix}hfe_joint" type="revolute">
-            <origin xyz="0.0198 -0.0124999999999998 0.0215" rpy="-1.5707963267949 0.0843795007429648 -1.5707963267949"/>
+            <origin xyz="0.0298000000000001 -0.0124999999999999 0.0214999999999999" rpy="-1.5707963267949 0 -1.5707963267949"/>
             <parent link="${prefix}shoulder_link"/>
             <child link="${prefix}femur_link"/>
-            <axis xyz="0 0 ${mult * 1}"/>
+            <axis xyz="0 0 1"/>
             <limit lower="${limits['hfe']['lower']}"
                    upper="${limits['hfe']['upper']}"
                    effort="${limits['hfe']['effort']}"
@@ -90,10 +100,10 @@
         </joint>
 
         <joint name="${prefix}kfe_joint" type="revolute">
-            <origin xyz="0.096057287853238 0 0.0200000000000001" rpy="-3.14159265358979 0 -0.0843795007429648"/>
+            <origin xyz="0.0960572429044665 0 0.00999999999999993" rpy="-3.14159265358979 0 0"/>
             <parent link="${prefix}femur_link"/>
             <child link="${prefix}tibia_link"/>
-            <axis xyz="0 0 ${mult * -1}"/>
+            <axis xyz="0 0 -1"/>
             <limit lower="${limits['kfe']['lower']}"
                    upper="${limits['kfe']['upper']}"
                    effort="${limits['kfe']['effort']}"
@@ -102,13 +112,13 @@
     </xacro:macro>
 
     <!-- Public limb macro: owns full attachment to body, hiding internal limb construction. -->
-    <xacro:macro name="limb" params="prefix x y z r p yw mult parent_link:=body_link">
-        <xacro:_limb_core prefix="${prefix}_" mult="${mult}"/>
+    <xacro:macro name="limb" params="prefix x y z r p yw parent_link:=body_link inverted_shoulder">
+        <xacro:_limb_core prefix="${prefix}_" inverted_shoulder="${inverted_shoulder}"/>
         <joint name="${prefix}_haa_joint" type="revolute">
             <parent link="${parent_link}"/>
             <child link="${prefix}_shoulder_link"/>
             <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} ${yw}"/>
-            <axis xyz="0 0 ${mult * -1}"/>
+            <axis xyz="0 0 -1"/>
             <limit lower="${limits['haa']['lower']}"
                    upper="${limits['haa']['upper']}"
                    effort="${limits['haa']['effort']}"
