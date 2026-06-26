@@ -19,9 +19,9 @@
     l3_len: 0.09750  # tibia Length (m)
 
     # Home position
-    home_x: -0.012
-    home_y: 0.02088
-    home_z: -0.078
+    home_x: 0.0
+    home_y: 0.0298
+    home_z: -0.14
 
 locomotion_commander:
   ros__parameters:
