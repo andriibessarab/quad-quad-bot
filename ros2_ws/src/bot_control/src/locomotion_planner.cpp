@@ -19,6 +19,10 @@ const std::string LIMB_PREFIXES_PARAM_NAME("limb_prefixes");
 const std::string HOME_X_PARAM_NAME("home_x");
 const std::string HOME_Y_PARAM_NAME("home_y");
 const std::string HOME_Z_PARAM_NAME("home_z");
+const std::string STEP_LEN_PARAM_NAME("step_len");
+const std::string STEP_HEIGHT_PARAM_NAME("step_height");
+const std::string SWING_DURATION_PARAM_NAME("swing_duration");
+const std::string STANCE_DURATION_PARAM_NAME("stance_duration");
 
 // other consts
 const std::string GAIT_PLANNER_NODE_NAME("gait_planner");
@@ -40,6 +44,12 @@ public:
       home_point_.x = this->declare_parameter<double>(HOME_X_PARAM_NAME);
       home_point_.y = this->declare_parameter<double>(HOME_Y_PARAM_NAME);
       home_point_.z = this->declare_parameter<double>(HOME_Z_PARAM_NAME);
+
+      // trot gait parameters
+      step_len_       = this->declare_parameter<double>(STEP_LEN_PARAM_NAME);
+      step_height_    = this->declare_parameter<double>(STEP_HEIGHT_PARAM_NAME);
+      swing_duration_ = this->declare_parameter<double>(SWING_DURATION_PARAM_NAME);
+      stance_duration_ = this->declare_parameter<double>(STANCE_DURATION_PARAM_NAME);
 
     } catch (
         const rclcpp::exceptions::UninitializedStaticallyTypedParameterException
@@ -67,11 +77,11 @@ public:
 private:
   void control_loop() {
     bot_math::LimbTrajectoryInput input;
-    input.gait_mode = gait_state_;
-    input.step_len = 0.025;
-    input.step_height = 0.025;
-    input.swing_duration = 0.4;
-    input.stance_duration = 0.75;
+    input.gait_mode       = gait_state_;
+    input.step_len        = step_len_;
+    input.step_height     = step_height_;
+    input.swing_duration  = swing_duration_;
+    input.stance_duration = stance_duration_;
 
     const double elapsed = (this->now() - gait_start_time_).seconds();
     const double gait_cycle_duration =
@@ -134,6 +144,10 @@ private:
   double control_loop_frequency_;
   std::vector<std::string> limb_prefixes_;
   geometry_msgs::msg::Point home_point_;
+  double step_len_;
+  double step_height_;
+  double swing_duration_;
+  double stance_duration_;
 };
 } // namespace bot_control
 
