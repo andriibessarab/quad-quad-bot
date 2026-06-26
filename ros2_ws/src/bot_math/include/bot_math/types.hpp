@@ -54,9 +54,9 @@ struct LimbTrajectoryInput {
   double global_phase = 0.0;            // global phase of gate (w/ no offset)
   double step_x = 0.0;
   double step_y = 0.0;
-  double step_height = 0.0;             // swing foot lift height
-  double swing_duration = 0.0;          // duration of swing phase
-  double stance_duration = 0.0;         // duration of stance phase
+  double step_height = 0.0;     // swing foot lift height
+  double swing_duration = 0.0;  // duration of swing phase
+  double stance_duration = 0.0; // duration of stance phase
 };
 } // namespace bot_math
 
