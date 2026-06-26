@@ -20,6 +20,30 @@ theme:
 repo_url: https://github.com/andriibessarab/quad-quad-bot
 repo_name: See on GitHub
 
+nav:
+  - Home: index.md
+  - Engineering:
+    - engineering/index.md
+    - Mechanical:
+      - engineering/mechanical/index.md
+      - CAD: engineering/mechanical/cad.md
+      - Manufacturing: engineering/mechanical/manufacturing.md
+    - Electrical:
+      - engineering/electrical/index.md
+      - Power: engineering/electrical/power.md
+      - Wiring: engineering/electrical/wiring.md
+      - Electronics: engineering/electrical/electronics.md
+    - Software:
+      - engineering/software/index.md
+      - Conventions: engineering/software/conventions.md
+      - Kinematics: engineering/software/kinematics.md
+      - Gait: engineering/software/gait.md
+      - Architecture: engineering/software/architecture.md
+      - URDF / Xacro: engineering/software/urdf.md
+      - Simulation: engineering/software/simulation.md
+      - Hardware Interface: engineering/software/hardware_interface.md
+    - BOM: engineering/bom.md
+
 plugins:
   - search
   - git-revision-date-localized:

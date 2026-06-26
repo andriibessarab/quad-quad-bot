@@ -10,8 +10,10 @@ from launch_ros.actions import Node
 BOT_CONTROL_PACKAGE_NAME = "bot_control"
 BOT_SIM_PACKAGE_NAME = "bot_sim"
 BOT_DESCRIPTION_PACKAGE_NAME = "bot_description"
+BOT_TELEOP_PACKAGE_NAME = "bot_teleop"
 
 LOCOMOTION_LAUNCH_FILE_NAME = "locomotion.launch.py"
+TELEOP_LAUNCH_FILE_NAME = "teleop.launch.py"
 SIM_LAUNCH_FILE_NAME = "sim.launch.py"
 ROBOT_URDF_FILE_NAME = "robot.urdf.xacro"
 
@@ -45,6 +47,7 @@ def launch_setup(context, *args, **kwargs):
     bot_control_share = get_package_share_directory(BOT_CONTROL_PACKAGE_NAME)
     bot_sim_share = get_package_share_directory(BOT_SIM_PACKAGE_NAME)
     bot_description_share = get_package_share_directory(BOT_DESCRIPTION_PACKAGE_NAME)
+    bot_teleop_share = get_package_share_directory(BOT_TELEOP_PACKAGE_NAME)
 
     # process xacro file
     xacro_file = os.path.join(bot_description_share, "urdf", ROBOT_URDF_FILE_NAME)
@@ -54,6 +57,13 @@ def launch_setup(context, *args, **kwargs):
     locomotion_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(bot_control_share, "launch", LOCOMOTION_LAUNCH_FILE_NAME)
+        )
+    )
+
+    # teleop: joystick -> /cmd_vel
+    teleop_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(bot_teleop_share, "launch", TELEOP_LAUNCH_FILE_NAME)
         )
     )
 
@@ -90,4 +100,5 @@ def launch_setup(context, *args, **kwargs):
         joint_state_broadcaster_spawner,
         joint_group_position_controller_spawner,
         locomotion_launch,
+        teleop_launch,
     ]

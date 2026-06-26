@@ -1,0 +1,16 @@
+teleop_twist_joy_node:
+  ros__parameters:
+    # Hold RB to enable motion (deadman switch)
+    enable_button: 5  # RB
+
+    # Linear motion
+    axis_linear:
+      x: 4          # right stick Y (i.e., fwd/bwd)
+    scale_linear:
+      x: 0.15       # m/s
+
+    # Angular motion
+    axis_angular:
+      yaw: 3        # right stick X (i.e., left/right)
+    scale_angular:
+      yaw: 0.8      # rad/s

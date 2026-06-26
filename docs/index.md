@@ -9,10 +9,7 @@ In short, the goal is to build a **quadruped robot** (think Boston Dynamics) tha
 ** (aka quadcopter). It is a unique challenge that will force me to get hands-on with a massive set of tools, including
 **CAD, kinematics, ROS, simulations, 3D printing, electronics, vision processing**, and more.
 
-What you are looking at is an early version of the documentation for this project. I split it into two main parts:
-
-* [**Devlog**](devlog/): frequent progress updates.
-* [**Engineering**](engineering/): technical deep dives and decisions.
+What you are looking at is the technical documentation for this project, covering the full stack from CAD and electronics to kinematics and software.
 
 I don’t have a set timeline or a final vision yet, so the scope is bound to change as I work through this project...
 
@@ -20,7 +17,6 @@ I don’t have a set timeline or a final vision yet, so the scope is bound to ch
 
 <div class="grid" markdown>
 
-[Read Devlog](devlog/){: .md-button }
 [Engineering Details](engineering/){: .md-button }
 
 </div>

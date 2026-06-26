@@ -1,0 +1,268 @@
+<?xml version="1.0" ?>
+<!--
+  Measurement world for quad-quad-bot walking evaluation.
+
+  Robot dimensions (from locomotion_params.yaml + robot.urdf.xacro):
+    Body footprint (hip-to-hip): 165.6 mm (front-back) × 171.6 mm (left-right)
+    Standing height:  ~111.5 mm  (home_z=−0.14 − leg_z=0.0285)
+    Hip offset  l1:    29.8 mm
+    Femur       l2:    96.1 mm
+    Tibia       l3:    97.5 mm
+    Max reach (l2+l3): 193.6 mm
+
+  Gait (trot):
+    Step length:      50 mm  → each 0.25 m tile = exactly 5 steps
+    Foot lift:        35 mm
+    Cycle period:    0.40 s  (swing 0.15 + stance 0.25)
+    Expected speed: ~0.125 m/s  →  1 m ≈ 8 s,  5 m ≈ 40 s
+
+  Robot walks in the −X world direction.
+  Runway: x ∈ [−6, +0.5],  y ∈ [−1, +1].
+
+  Scale features:
+    - 0.25 m checkerboard (mid-grey on near-black ground)
+    - Start line at x=0
+    - Speed reference bar: 0.125 m = 1 s of walking (x=0 → x=−0.125)
+    - Coloured floor bands at −1 m … −5 m (red→orange→yellow→green→cyan)
+    - Matching coloured posts at y=±0.50 m (off centre — clear of robot path)
+    - Body footprint slab (magenta) at x=0, y=1.4 m: 165.6 × 171.6 mm
+    - Lateral drift lines at y=±0.172 m (robot full foot-spread)
+-->
+<sdf version="1.8">
+  <world name="reference_grid">
+
+    <physics name="1ms" type="ignored">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+
+    <plugin filename="gz-sim-physics-system"           name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system"     name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-contact-system"           name="gz::sim::systems::Contact"/>
+
+    <!-- Sun — slightly dimmed to keep the dark theme readable -->
+    <light name="sun" type="directional">
+      <cast_shadows>true</cast_shadows>
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.65 0.65 0.65 1</diffuse>
+      <specular>0.10 0.10 0.10 1</specular>
+      <direction>-0.5 0.1 -0.9</direction>
+    </light>
+
+    <!-- ─── Ground plane (near-black) ───────────────────────────────────── -->
+    <model name="ground_plane">
+      <static>true</static>
+      <link name="link">
+        <collision name="collision">
+          <geometry><plane><normal>0 0 1</normal><size>40 40</size></plane></geometry>
+        </collision>
+        <visual name="visual">
+          <geometry><plane><normal>0 0 1</normal><size>40 40</size></plane></geometry>
+          <material>
+            <ambient>0.12 0.12 0.12 1</ambient>
+            <diffuse>0.12 0.12 0.12 1</diffuse>
+          </material>
+        </visual>
+      </link>
+    </model>
+
+    <!-- ─── Checkerboard: mid-grey tiles on dark ground ──────────────────
+         Runway x ∈ [−6, +0.5],  y ∈ [−1, +1].  0.25 m tiles = 5 steps each. -->
+    <model name="tile_0"><static>true</static><pose>-5.8750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_1"><static>true</static><pose>-5.8750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_2"><static>true</static><pose>-5.8750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_3"><static>true</static><pose>-5.8750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_4"><static>true</static><pose>-5.6250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_5"><static>true</static><pose>-5.6250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_6"><static>true</static><pose>-5.6250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_7"><static>true</static><pose>-5.6250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_8"><static>true</static><pose>-5.3750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_9"><static>true</static><pose>-5.3750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_10"><static>true</static><pose>-5.3750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_11"><static>true</static><pose>-5.3750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_12"><static>true</static><pose>-5.1250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_13"><static>true</static><pose>-5.1250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_14"><static>true</static><pose>-5.1250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_15"><static>true</static><pose>-5.1250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_16"><static>true</static><pose>-4.8750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_17"><static>true</static><pose>-4.8750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_18"><static>true</static><pose>-4.8750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_19"><static>true</static><pose>-4.8750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_20"><static>true</static><pose>-4.6250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_21"><static>true</static><pose>-4.6250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_22"><static>true</static><pose>-4.6250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_23"><static>true</static><pose>-4.6250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_24"><static>true</static><pose>-4.3750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_25"><static>true</static><pose>-4.3750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_26"><static>true</static><pose>-4.3750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_27"><static>true</static><pose>-4.3750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_28"><static>true</static><pose>-4.1250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_29"><static>true</static><pose>-4.1250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_30"><static>true</static><pose>-4.1250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_31"><static>true</static><pose>-4.1250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_32"><static>true</static><pose>-3.8750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_33"><static>true</static><pose>-3.8750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_34"><static>true</static><pose>-3.8750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_35"><static>true</static><pose>-3.8750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_36"><static>true</static><pose>-3.6250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_37"><static>true</static><pose>-3.6250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_38"><static>true</static><pose>-3.6250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_39"><static>true</static><pose>-3.6250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_40"><static>true</static><pose>-3.3750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_41"><static>true</static><pose>-3.3750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_42"><static>true</static><pose>-3.3750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_43"><static>true</static><pose>-3.3750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_44"><static>true</static><pose>-3.1250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_45"><static>true</static><pose>-3.1250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_46"><static>true</static><pose>-3.1250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_47"><static>true</static><pose>-3.1250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_48"><static>true</static><pose>-2.8750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_49"><static>true</static><pose>-2.8750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_50"><static>true</static><pose>-2.8750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_51"><static>true</static><pose>-2.8750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_52"><static>true</static><pose>-2.6250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_53"><static>true</static><pose>-2.6250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_54"><static>true</static><pose>-2.6250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_55"><static>true</static><pose>-2.6250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_56"><static>true</static><pose>-2.3750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_57"><static>true</static><pose>-2.3750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_58"><static>true</static><pose>-2.3750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_59"><static>true</static><pose>-2.3750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_60"><static>true</static><pose>-2.1250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_61"><static>true</static><pose>-2.1250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_62"><static>true</static><pose>-2.1250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_63"><static>true</static><pose>-2.1250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_64"><static>true</static><pose>-1.8750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_65"><static>true</static><pose>-1.8750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_66"><static>true</static><pose>-1.8750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_67"><static>true</static><pose>-1.8750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_68"><static>true</static><pose>-1.6250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_69"><static>true</static><pose>-1.6250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_70"><static>true</static><pose>-1.6250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_71"><static>true</static><pose>-1.6250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_72"><static>true</static><pose>-1.3750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_73"><static>true</static><pose>-1.3750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_74"><static>true</static><pose>-1.3750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_75"><static>true</static><pose>-1.3750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_76"><static>true</static><pose>-1.1250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_77"><static>true</static><pose>-1.1250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_78"><static>true</static><pose>-1.1250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_79"><static>true</static><pose>-1.1250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_80"><static>true</static><pose>-0.8750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_81"><static>true</static><pose>-0.8750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_82"><static>true</static><pose>-0.8750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_83"><static>true</static><pose>-0.8750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_84"><static>true</static><pose>-0.6250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_85"><static>true</static><pose>-0.6250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_86"><static>true</static><pose>-0.6250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_87"><static>true</static><pose>-0.6250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_88"><static>true</static><pose>-0.3750 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_89"><static>true</static><pose>-0.3750 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_90"><static>true</static><pose>-0.3750 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_91"><static>true</static><pose>-0.3750 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_92"><static>true</static><pose>-0.1250 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_93"><static>true</static><pose>-0.1250 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_94"><static>true</static><pose>-0.1250 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_95"><static>true</static><pose>-0.1250 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_96"><static>true</static><pose>0.1250 -0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_97"><static>true</static><pose>0.1250 -0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_98"><static>true</static><pose>0.1250 0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_99"><static>true</static><pose>0.1250 0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_100"><static>true</static><pose>0.3750 -0.8750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_101"><static>true</static><pose>0.3750 -0.3750 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_102"><static>true</static><pose>0.3750 0.1250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+    <model name="tile_103"><static>true</static><pose>0.3750 0.6250 0.001 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.25 0.25 0.002</size></box></geometry><material><ambient>0.42 0.42 0.42 1</ambient><diffuse>0.42 0.42 0.42 1</diffuse></material></visual></link></model>
+
+    <!-- ─── Start line (x=0) ─────────────────────────────────────────────
+         White band — robot spawns here and walks in −X direction. -->
+    <model name="start_line">
+      <static>true</static>
+      <pose>0.0 0 0.005 0 0 0</pose>
+      <link name="link"><visual name="v">
+        <geometry><box><size>0.030 2.0 0.008</size></box></geometry>
+        <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+      </visual></link>
+    </model>
+
+    <!-- ─── Speed reference bar ──────────────────────────────────────────
+         0.125 m long = exactly 1 second of walking at nominal 0.125 m/s.
+         Centred at x=−0.0625, placed at y=+0.35 m (clear of robot). -->
+    <model name="speed_ref_1s">
+      <static>true</static>
+      <pose>-0.0625 0.35 0.005 0 0 0</pose>
+      <link name="link"><visual name="v">
+        <geometry><box><size>0.125 0.020 0.008</size></box></geometry>
+        <material><ambient>1 1 1 1</ambient><diffuse>1 1 1 1</diffuse></material>
+      </visual></link>
+    </model>
+
+    <!-- ─── Coloured floor bands (10 mm tall, full corridor width) ───────
+         Robot walks over these — no collision geometry.
+         1 m=red  2 m=orange  3 m=yellow  4 m=green  5 m=cyan
+         Arrival times at 0.125 m/s: 8 s / 16 s / 24 s / 32 s / 40 s -->
+    <model name="band_1m"><static>true</static><pose>-1.0 0 0.006 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.05 2.0 0.010</size></box></geometry><material><ambient>1.0 0.15 0.15 1</ambient><diffuse>1.0 0.15 0.15 1</diffuse></material></visual></link></model>
+    <model name="band_2m"><static>true</static><pose>-2.0 0 0.006 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.05 2.0 0.010</size></box></geometry><material><ambient>1.0 0.55 0.10 1</ambient><diffuse>1.0 0.55 0.10 1</diffuse></material></visual></link></model>
+    <model name="band_3m"><static>true</static><pose>-3.0 0 0.006 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.05 2.0 0.010</size></box></geometry><material><ambient>0.95 0.95 0.10 1</ambient><diffuse>0.95 0.95 0.10 1</diffuse></material></visual></link></model>
+    <model name="band_4m"><static>true</static><pose>-4.0 0 0.006 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.05 2.0 0.010</size></box></geometry><material><ambient>0.15 0.85 0.20 1</ambient><diffuse>0.15 0.85 0.20 1</diffuse></material></visual></link></model>
+    <model name="band_5m"><static>true</static><pose>-5.0 0 0.006 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.05 2.0 0.010</size></box></geometry><material><ambient>0.10 0.85 0.90 1</ambient><diffuse>0.10 0.85 0.90 1</diffuse></material></visual></link></model>
+
+    <!-- ─── Metre posts — at y=±0.50 m (clear of robot path at y≈0) ─────
+         Height 0.30 m, colour matches band. Pair left+right for each metre mark.
+         Half-metre posts (grey) at −0.5, −1.5, −2.5, −3.5, −4.5 m. -->
+    <!-- Half-metre grey posts -->
+    <model name="post_0p5L"><static>true</static><pose>-0.5  0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <model name="post_0p5R"><static>true</static><pose>-0.5 -0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <model name="post_1p5L"><static>true</static><pose>-1.5  0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <model name="post_1p5R"><static>true</static><pose>-1.5 -0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <model name="post_2p5L"><static>true</static><pose>-2.5  0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <model name="post_2p5R"><static>true</static><pose>-2.5 -0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <model name="post_3p5L"><static>true</static><pose>-3.5  0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <model name="post_3p5R"><static>true</static><pose>-3.5 -0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <model name="post_4p5L"><static>true</static><pose>-4.5  0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <model name="post_4p5R"><static>true</static><pose>-4.5 -0.5 0.09 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.020 0.020 0.18</size></box></geometry><material><ambient>0.55 0.55 0.55 1</ambient><diffuse>0.55 0.55 0.55 1</diffuse></material></visual></link></model>
+    <!-- Whole-metre coloured posts (left + right) -->
+    <model name="mpost_1mL"><static>true</static><pose>-1.0  0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>1.0 0.15 0.15 1</ambient><diffuse>1.0 0.15 0.15 1</diffuse></material></visual></link></model>
+    <model name="mpost_1mR"><static>true</static><pose>-1.0 -0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>1.0 0.15 0.15 1</ambient><diffuse>1.0 0.15 0.15 1</diffuse></material></visual></link></model>
+    <model name="mpost_2mL"><static>true</static><pose>-2.0  0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>1.0 0.55 0.10 1</ambient><diffuse>1.0 0.55 0.10 1</diffuse></material></visual></link></model>
+    <model name="mpost_2mR"><static>true</static><pose>-2.0 -0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>1.0 0.55 0.10 1</ambient><diffuse>1.0 0.55 0.10 1</diffuse></material></visual></link></model>
+    <model name="mpost_3mL"><static>true</static><pose>-3.0  0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>0.95 0.95 0.10 1</ambient><diffuse>0.95 0.95 0.10 1</diffuse></material></visual></link></model>
+    <model name="mpost_3mR"><static>true</static><pose>-3.0 -0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>0.95 0.95 0.10 1</ambient><diffuse>0.95 0.95 0.10 1</diffuse></material></visual></link></model>
+    <model name="mpost_4mL"><static>true</static><pose>-4.0  0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>0.15 0.85 0.20 1</ambient><diffuse>0.15 0.85 0.20 1</diffuse></material></visual></link></model>
+    <model name="mpost_4mR"><static>true</static><pose>-4.0 -0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>0.15 0.85 0.20 1</ambient><diffuse>0.15 0.85 0.20 1</diffuse></material></visual></link></model>
+    <model name="mpost_5mL"><static>true</static><pose>-5.0  0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>0.10 0.85 0.90 1</ambient><diffuse>0.10 0.85 0.90 1</diffuse></material></visual></link></model>
+    <model name="mpost_5mR"><static>true</static><pose>-5.0 -0.5 0.15 0 0 0</pose><link name="link"><visual name="v"><geometry><box><size>0.025 0.025 0.30</size></box></geometry><material><ambient>0.10 0.85 0.90 1</ambient><diffuse>0.10 0.85 0.90 1</diffuse></material></visual></link></model>
+
+    <!-- ─── Lateral drift guide lines (y = ±0.172 m) ─────────────────────
+         = robot full foot-spread: 2×(leg_y + l1) = 2×(0.056+0.02980) = 0.1716 m -->
+    <model name="drift_line_left">
+      <static>true</static>
+      <pose>-2.75 0.172 0.004 0 0 0</pose>
+      <link name="link"><visual name="v">
+        <geometry><box><size>6.5 0.010 0.006</size></box></geometry>
+        <material><ambient>0.7 0.7 0.7 1</ambient><diffuse>0.7 0.7 0.7 1</diffuse></material>
+      </visual></link>
+    </model>
+    <model name="drift_line_right">
+      <static>true</static>
+      <pose>-2.75 -0.172 0.004 0 0 0</pose>
+      <link name="link"><visual name="v">
+        <geometry><box><size>6.5 0.010 0.006</size></box></geometry>
+        <material><ambient>0.7 0.7 0.7 1</ambient><diffuse>0.7 0.7 0.7 1</diffuse></material>
+      </visual></link>
+    </model>
+
+    <!-- ─── Body footprint reference slab (magenta) ──────────────────────
+         Exact hip-to-hip shadow: 165.6 × 171.6 mm.
+         Placed at x=0.3, y=1.4 m (off the corridor, near start). -->
+    <model name="body_footprint_ref">
+      <static>true</static>
+      <pose>0.3 1.4 0.005 0 0 0</pose>
+      <link name="link"><visual name="v">
+        <geometry><box><size>0.1656 0.1716 0.008</size></box></geometry>
+        <material><ambient>0.9 0.1 0.9 1</ambient><diffuse>0.9 0.1 0.9 1</diffuse></material>
+      </visual></link>
+    </model>
+
+  </world>
+</sdf>

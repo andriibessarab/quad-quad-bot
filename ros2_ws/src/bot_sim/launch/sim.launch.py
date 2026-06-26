@@ -17,6 +17,7 @@ def generate_launch_description():
     pkg_bot_description = get_package_share_directory("bot_description")
     resource_path = str(Path(pkg_bot_description).parent)  # where gazebo looks for package names
     pkg_ros_gz_sim = get_package_share_directory("ros_gz_sim")
+    pkg_bot_sim = get_package_share_directory("bot_sim")
 
     # Set GZ_SIM_RESOURCE_PATH so Gazebo can find meshes/models
     set_gz_path = SetEnvironmentVariable(
@@ -27,7 +28,7 @@ def generate_launch_description():
     # Start Gazebo Harmonic with an empty world
     gazebo = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(os.path.join(pkg_ros_gz_sim, "launch", "gz_sim.launch.py")),
-        launch_arguments=[("gz_args", "-r empty.sdf")],
+        launch_arguments=[("gz_args", ["-r ", pkg_bot_sim + "/worlds/reference_grid.sdf"])],
     )
 
     # Spawn robot into Gazebo
