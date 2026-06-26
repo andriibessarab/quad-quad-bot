@@ -6,7 +6,7 @@
                     value="${xacro.load_yaml('$(find bot_description)/config/joint_limits.yaml')}"/>
 
     <!-- Internal limb geometry + internal joints (hfe/kfe). -->
-    <xacro:macro name="_limb_core" params="prefix inverted_shoulder">
+    <xacro:macro name="_limb_core" params="prefix inverted_shoulder hfe_axis_mult kfe_axis_mult">
         <!-- Links -->
         <link name="${prefix}shoulder_link">
             <inertial>
@@ -98,7 +98,7 @@
 
             <parent link="${prefix}shoulder_link"/>
             <child link="${prefix}femur_link"/>
-            <axis xyz="0 0 1"/>
+            <axis xyz="0 0 ${hfe_axis_mult * -1}"/>
             <limit lower="${limits['hfe']['lower']}"
                    upper="${limits['hfe']['upper']}"
                    effort="${limits['hfe']['effort']}"
@@ -109,7 +109,7 @@
             <origin xyz="0.0960572429044665 0 0.00999999999999993" rpy="-3.14159265358979 0 0"/>
             <parent link="${prefix}femur_link"/>
             <child link="${prefix}tibia_link"/>
-            <axis xyz="0 0 -1"/>
+            <axis xyz="0 0 ${kfe_axis_mult * 1}"/>
             <limit lower="${limits['kfe']['lower']}"
                    upper="${limits['kfe']['upper']}"
                    effort="${limits['kfe']['effort']}"
@@ -118,13 +118,13 @@
     </xacro:macro>
 
     <!-- Public limb macro: owns full attachment to body, hiding internal limb construction. -->
-    <xacro:macro name="limb" params="prefix x y z r p yw parent_link:=body_link inverted_shoulder">
-        <xacro:_limb_core prefix="${prefix}_" inverted_shoulder="${inverted_shoulder}"/>
+    <xacro:macro name="limb" params="prefix x y z r p yw parent_link:=body_link inverted_shoulder hfe_axis_mult kfe_axis_mult">
+        <xacro:_limb_core prefix="${prefix}_" inverted_shoulder="${inverted_shoulder}" hfe_axis_mult="${hfe_axis_mult}" kfe_axis_mult="${kfe_axis_mult}"/>
         <joint name="${prefix}_haa_joint" type="revolute">
             <parent link="${parent_link}"/>
             <child link="${prefix}_shoulder_link"/>
             <origin xyz="${x} ${y} ${z}" rpy="${r} ${p} ${yw}"/>
-            <axis xyz="0 0 -1"/>
+            <axis xyz="0 0 1"/>
             <limit lower="${limits['haa']['lower']}"
                    upper="${limits['haa']['upper']}"
                    effort="${limits['haa']['effort']}"
