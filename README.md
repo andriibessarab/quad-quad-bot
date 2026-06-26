@@ -23,17 +23,23 @@
 
 <table>
   <tr>
-    <td align="center" width="33%">
-      <img src="docs/assets/images/current_cad_body.png" alt="CAD render" height="220"/>
-      <br/><sub><b>CAD Model</b></sub>
+    <td align="center" width="50%">
+      <img src="docs/assets/images/current_cad_body.png" alt="CAD render" style="width:360px;height:240px;object-fit:cover;"/>
+      <br/><br/><b>CAD Model</b>
     </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/images/gazebo_trot.gif" alt="Gazebo simulation" height="220"/>
-      <br/><sub><b>Gazebo Trot</b></sub>
+    <td align="center" width="50%">
+      <img src="docs/assets/images/gazebo_trot.gif" alt="Gazebo simulation" style="width:360px;height:240px;object-fit:cover;"/>
+      <br/><br/><b>Gazebo Trot</b>
     </td>
-    <td align="center" width="33%">
-      <img src="docs/assets/images/physical.jpg" alt="Physical robot" height="220"/>
-      <br/><sub><b>Hardware <i>(WIP)</i></b></sub>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="docs/assets/images/physical.png" alt="Physical robot" style="width:360px;height:240px;object-fit:cover;"/>
+      <br/><br/><b>Hardware <i>(WIP)</i></b>
+    </td>
+    <td align="center" width="50%">
+      <img src="" alt="" style="width:360px;height:240px;object-fit:cover;"/>
+      <br/><br/><b>Nothing here yet :)</b>
     </td>
   </tr>
 </table>
