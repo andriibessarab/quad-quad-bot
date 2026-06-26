@@ -20,6 +20,7 @@
     <exec_depend>bot_control</exec_depend>
     <exec_depend>bot_sim</exec_depend>
     <exec_depend>bot_description</exec_depend>
+    <exec_depend>bot_teleop</exec_depend>
 
     <export>
         <build_type>ament_cmake</build_type>
