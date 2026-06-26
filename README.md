@@ -1,7 +1,9 @@
-<h1><img src="docs/assets/images/logo.png" alt="logo" height="50" align="middle" /> Quad-Quad Bot</h1>
 <p>
-  Custom desktop-size quadruped robot - from design, and CAD to ROS 2 simulation, and a physical build.
+  <img src="docs/assets/images/logo_and_name.png.png" alt="logo" height="80"/>
 </p>
+<small>
+  Custom desktop-size quadruped robot — from design and CAD to ROS 2 simulation and a physical build.
+</small>
 
 <hr/>
 
@@ -42,18 +44,18 @@
 
 ```
 quad-quad-bot/
-├── ros2_ws/        # ROS 2 workspace — all software (nodes, controllers, bringup)
+├── ros2_ws/         # ROS 2 workspace — all software (nodes, controllers, bringup)
 ├── design/
-│   ├── cad/        # SolidWorks source files
-│   ├── slicer/     # 3D print slicer projects
-│   └── electrical/ # Wiring diagrams
-└── docs/           # Technical documentation (MkDocs)
+│   ├── cad/         # SolidWorks source files
+│   ├── slicer/      # 3D print slicer projects
+│   └── electrical/  # Wiring diagrams
+└── docs/            # Technical documentation (MkDocs)
 ```
 
 <hr/>
 
 ## Documentation
-Full technical documentation can be found [here](quad-quad-bot.andriibessarab.com).
+Full technical documentation can be found [here](https://quad-quad-bot.andriibessarab.com/).
 
 <hr/>
 
