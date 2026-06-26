@@ -46,7 +46,22 @@ gait_planner:
     control_loop_frequency: 100.0  # Hz
 
     # Trot gait parameters
-    step_len: 0.050        # forward stride length per step (m)
     step_height: 0.035     # foot lift height during swing  (m)
     swing_duration: 0.15   # time for swing phase           (s)
     stance_duration: 0.25  # time for stance phase          (s); duty factor=0.64
+
+    # Hip positions relative to body center in robot frame (x=forward, y=left)
+    # Magnitudes sourced from leg_x/leg_y in robot.urdf.xacro
+    limb_info:
+      fr:
+        hip_x:  0.0828
+        hip_y: -0.0560
+      fl:
+        hip_x:  0.0828
+        hip_y:  0.0560
+      br:
+        hip_x: -0.0828
+        hip_y: -0.0560
+      bl:
+        hip_x: -0.0828
+        hip_y:  0.0560
