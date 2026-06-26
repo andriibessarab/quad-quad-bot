@@ -23,8 +23,10 @@
     home_y: 0.0298
     home_z: -0.14
 
-locomotion_commander:
-  ros__parameters:
+    # Sourced from leg_x/leg_y in robot.urdf.xacro.
+    hip_x_offset: 0.0828  # fwd/bwd distance from body center to hip    (m)
+    hip_y_offset: 0.0560  # left/right distance from body center to hip (m)
+
     limb_info: # needed to account for inversions
       fr:
         is_right: true
@@ -39,7 +41,9 @@ locomotion_commander:
         is_right: false
         is_back: true
 
-    command_dispatch_frequency: 100.0  #Hz
+locomotion_commander:
+  ros__parameters:
+    command_dispatch_frequency: 100.0  # Hz
 
 gait_planner:
   ros__parameters:
