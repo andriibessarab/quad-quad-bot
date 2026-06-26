@@ -1,4 +1,4 @@
-<h1><img src="docs/assets/images/logo.png" alt="logo" width="120" /> Quad-Quad Bot</h1>
+<h1><img src="docs/assets/images/logo.png" alt="logo" height="40" style="vertical-align:middle; margin-right:8px;" /> Quad-Quad Bot</h1>
 <p>
   Custom desktop-size quadruped robot - from design, and CAD to ROS 2 simulation, and a physical build.
 </p>
@@ -28,11 +28,29 @@
       <br/><sub><b>CAD Model</b></sub>
     </td>
     <td align="center" width="33%">
+      <img src="/docs/assets/images/gazebo_trot.gif" alt="Gazebo simulation" width="100%"/>
+      <br/><sub><b>Gazebo Trot</b></sub>
+    </td>
+    <td align="center" width="33%">
       <img src="docs/assets/images/physical.jpg" alt="Physical robot" width="100%"/>
       <br/><sub><b>Hardware <i>(WIP)</i></b></sub>
     </td>
   </tr>
 </table>
+
+<hr/>
+
+## Repository Structure
+
+```
+quad-quad-bot/
+├── ros2_ws/        # ROS 2 workspace — all software (nodes, controllers, bringup)
+├── design/
+│   ├── cad/        # SolidWorks source files
+│   ├── slicer/     # 3D print slicer projects
+│   └── electrical/ # Wiring diagrams
+└── docs/           # Technical documentation (MkDocs)
+```
 
 <hr/>
 
