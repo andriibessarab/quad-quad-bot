@@ -1,5 +1,5 @@
 <p>
-  <img src="docs/assets/images/logo_and_name.png" alt="logo" height="80"/>
+  <img src="docs/assets/images/logo_and_name.png" alt="logo" height="120"/>
 </p>
 <small>
   Custom desktop-size quadruped robot — from design and CAD to ROS 2 simulation and a physical build.
