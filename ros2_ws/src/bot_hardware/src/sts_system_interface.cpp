@@ -3,7 +3,7 @@
 #include "hardware_interface/types/hardware_interface_type_values.hpp"
 #include "rclcpp/logging.hpp"
 
-#include "ftservo_linux/SMS_STS.h"
+#include "SMS_STS.h"
 #include "yaml-cpp/yaml.h"
 
 #include <cmath>
@@ -218,20 +218,14 @@ hardware_interface::CallbackReturn StsSystemInterface::on_deactivate(
 hardware_interface::return_type StsSystemInterface::read(
   const rclcpp::Time &, const rclcpp::Duration &)
 {
-  const size_t n = joint_configs_.size();
-  std::vector<uint8_t> ids(n);
-  std::vector<int16_t> pos(n, 0);
-  for (size_t i = 0; i < n; ++i) {
-    ids[i] = static_cast<uint8_t>(joint_configs_[i].motor_id);
-  }
-
-  if (driver_->SyncReadPos(ids.data(), static_cast<uint8_t>(n), pos.data()) < 0) {
-    RCLCPP_ERROR(rclcpp::get_logger(LOGGER), "SyncReadPos failed");
-    return hardware_interface::return_type::ERROR;
-  }
-
-  for (size_t i = 0; i < n; ++i) {
-    hw_positions_[i]  = ticks_to_rad(static_cast<int>(pos[i]), joint_configs_[i]);
+  for (size_t i = 0; i < joint_configs_.size(); ++i) {
+    int ticks = driver_->ReadPos(joint_configs_[i].motor_id);
+    if (ticks < 0) {
+      RCLCPP_ERROR(rclcpp::get_logger(LOGGER),
+        "ReadPos failed for motor ID %d", joint_configs_[i].motor_id);
+      return hardware_interface::return_type::ERROR;
+    }
+    hw_positions_[i]  = ticks_to_rad(ticks, joint_configs_[i]);
     hw_velocities_[i] = 0.0;
   }
   return hardware_interface::return_type::OK;
@@ -268,13 +262,9 @@ hardware_interface::return_type StsSystemInterface::write(
       std::clamp(rad_to_ticks(clamped, joint_configs_[i]), 0, 4095));
   }
 
-  if (driver_->SyncWritePosEx(
+  driver_->SyncWritePosEx(
     ids.data(), static_cast<uint8_t>(n),
-    positions.data(), speeds.data(), accs.data()) < 0)
-  {
-    RCLCPP_ERROR(rclcpp::get_logger(LOGGER), "SyncWritePosEx failed");
-    return hardware_interface::return_type::ERROR;
-  }
+    positions.data(), speeds.data(), accs.data());
 
   return hardware_interface::return_type::OK;
 }
