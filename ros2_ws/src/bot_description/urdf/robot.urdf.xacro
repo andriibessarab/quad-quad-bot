@@ -28,11 +28,10 @@
     <xacro:limb prefix="br" x="${-leg_x}" y="${-leg_y}" z="${leg_z}" r="${leg_roll}" p="${leg_pitch}" yw="${-leg_yaw}" inverted_shoulder="false" hfe_axis_mult="1" kfe_axis_mult="1"/>
 
     <xacro:if value="$(arg sim)">
-        <xacro:ros2_control name="GazeboSystem" hardware_plugin="gz_ros2_control/GazeboSimSystem"/>
+        <xacro:ros2_control name="GazeboSystem" hardware_plugin="gz_ros2_control/GazeboSimSystem" is_hardware="false"/>
         <xacro:gazebo_ros2_control/>
     </xacro:if>
     <xacro:unless value="$(arg sim)">
-        <xacro:ros2_control name="HardwareSystem" hardware_plugin="$(arg hardware_plugin)"
-            motor_params_path="$(find bot_hardware)/config/motor_params.yaml"/>
+        <xacro:ros2_control name="HardwareSystem" hardware_plugin="$(arg hardware_plugin)" is_hardware="true"/>
     </xacro:unless>
 </robot>
