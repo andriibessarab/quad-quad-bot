@@ -142,6 +142,31 @@ hardware_interface::CallbackReturn StsSystemInterface::on_activate(
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
+int StsSystemInterface::rad_to_ticks(double rad, std::size_t i) const {
+  const int ticks =
+      static_cast<int>(std::lround(directions_[i] * rad / kRadPerTick)) +
+      offset_ticks_[i];
+  return std::clamp(ticks, 0, 4095);
+}
+
+double StsSystemInterface::ticks_to_rad(int ticks, std::size_t i) const {
+  return directions_[i] * (ticks - offset_ticks_[i]) * kRadPerTick;
+}
+
+// On deactivation, turn off motor torques
+hardware_interface::CallbackReturn StsSystemInterface::on_deactivate(
+    const rclcpp_lifecycle::State & /*previous_state*/) {
+  for (std::size_t i = 0; i < motor_ids_.size(); ++i) {
+    if (servo_.EnableTorque(motor_ids_[i], 0) ==
+        0) { // == 0 means couldn't turn off
+      RCLCPP_ERROR(get_logger(), "Failed to disable torque on servo ID %d (%s)",
+                   motor_ids_[i], info_.joints[i].name.c_str());
+    }
+  }
+  RCLCPP_INFO(get_logger(), "Torque disabled");
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
 } // namespace bot_hardware
 
 PLUGINLIB_EXPORT_CLASS(bot_hardware::StsSystemInterface,
