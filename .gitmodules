@@ -1,0 +1,3 @@
+[submodule "ros2_ws/src/bot_hardware/external/SCServo_Linux"]
+	path = ros2_ws/src/bot_hardware/external/SCServo_Linux
+	url = https://github.com/adityakamath/SCServo_Linux
