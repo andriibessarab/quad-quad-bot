@@ -18,7 +18,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
   $<INSTALL_INTERFACE:include>
 )
 
-target_link_libraries(${PROJECT_NAME} SCServo yaml-cpp)
+target_link_libraries(${PROJECT_NAME} ftservo_linux::SCServo yaml-cpp)
 
 ament_target_dependencies(${PROJECT_NAME}
   hardware_interface

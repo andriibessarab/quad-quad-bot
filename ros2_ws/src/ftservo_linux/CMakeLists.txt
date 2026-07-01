@@ -28,7 +28,7 @@ install(FILES ${hdrs}
   DESTINATION include/ftservo_linux
 )
 
-ament_export_targets(export_ftservo_linux HAS_LIBRARY_TARGET)
+ament_export_targets(export_ftservo_linux HAS_LIBRARY_TARGET NAMESPACE ftservo_linux::)
 ament_export_include_directories(include/ftservo_linux)
 
 ament_package()
