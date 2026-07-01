@@ -102,6 +102,46 @@ hardware_interface::CallbackReturn StsSystemInterface::on_configure(
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
+// Enable all motor torques (hold position) and set current positions as goals
+// to avoid snapping on first write
+hardware_interface::CallbackReturn StsSystemInterface::on_activate(
+    const rclcpp_lifecycle::State & /*previous_state*/) {
+  for (std::size_t i = 0; i < motor_ids_.size(); ++i) {
+    // enable motor torque (i.e. hold position)
+    if (servo_.EnableTorque(motor_ids_[i], 1) == 0) { // == 0 indicates failure
+      RCLCPP_ERROR(get_logger(), "Failed to enable torque on servo ID %d (%s)",
+                   motor_ids_[i], info_.joints[i].name.c_str());
+      // disable all motor torques since there was an issue
+      for (std::size_t j = 0; j < i; ++j) {
+        servo_.EnableTorque(motor_ids_[j], 0);
+      }
+      return hardware_interface::CallbackReturn::ERROR;
+    }
+
+    // read servo's feedback into internal buffer
+    if (servo_.FeedBack(motor_ids_[i]) == 0) { // == 0 indicates failure
+      RCLCPP_ERROR(get_logger(),
+                   "Failed to read initial position for servo ID %d (%s)",
+                   motor_ids_[i], info_.joints[i].name.c_str());
+      // disable all motor torques since there was an issue
+      for (std::size_t j = 0; j <= i; ++j) {
+        servo_.EnableTorque(motor_ids_[j], 0);
+      }
+      return hardware_interface::CallbackReturn::ERROR;
+    }
+
+    // seed command with CURRENT pose so the joints don't snap to zero on the
+    // first write() cycle.
+    const double pos = ticks_to_rad(servo_.ReadPos(-1), i);
+    hw_positions_[i] = pos;
+    hw_commands_position_[i] = pos;
+    last_cmd_positions_[i] = pos;
+  }
+
+  RCLCPP_INFO(get_logger(), "Torque enabled; commands seeded to current pose");
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
 } // namespace bot_hardware
 
 PLUGINLIB_EXPORT_CLASS(bot_hardware::StsSystemInterface,
