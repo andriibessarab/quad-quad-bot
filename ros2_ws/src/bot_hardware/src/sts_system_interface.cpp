@@ -167,6 +167,28 @@ hardware_interface::CallbackReturn StsSystemInterface::on_deactivate(
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
+// Update feedback
+hardware_interface::return_type
+StsSystemInterface::read(const rclcpp::Time & /*time*/,
+                         const rclcpp::Duration & /*period*/) {
+  for (std::size_t i = 0; i < motor_ids_.size(); ++i) {
+    // One FeedBack() fetches the whole status block; Read*(-1) then parses
+    // from that buffer with no extra bus traffic
+    if (servo_.FeedBack(motor_ids_[i]) != 0) {
+      hw_positions_[i] = ticks_to_rad(servo_.ReadPos(-1), i);
+      hw_velocities_[i] = directions_[i] * servo_.ReadSpeed(-1) * kRadPerTick;
+      hw_efforts_[i] = static_cast<double>(servo_.ReadLoad(-1));
+
+    } else { // == 0 means could not read feedback
+
+      RCLCPP_WARN(get_logger(),
+                  "FeedBack failed for servo ID %d (%s); keeping last value",
+                  motor_ids_[i], info_.joints[i].name.c_str());
+    }
+  }
+  return hardware_interface::return_type::OK;
+}
+
 } // namespace bot_hardware
 
 PLUGINLIB_EXPORT_CLASS(bot_hardware::StsSystemInterface,
