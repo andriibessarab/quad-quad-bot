@@ -1,7 +1,6 @@
 # Hardware configuration for the physical robot.
-# Loaded by StsSystemInterface::on_init() via the motor_params_path URDF param.
 
-hardware:
+bus:
   serial_port: /dev/ttyUSB0
   baud_rate: 1000000           # 1Mbps. Serial communication speed between your computer and the servo bu
   max_velocity_rad_per_s: 0.5  # Software velocity clamp: max rad/s any joint can move per write() cycle.
