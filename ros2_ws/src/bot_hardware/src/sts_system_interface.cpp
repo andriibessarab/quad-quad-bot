@@ -8,7 +8,7 @@
 
 namespace bot_hardware {
 
-// Init - runs once
+// Init in-memory setup
 hardware_interface::CallbackReturn StsSystemInterface::on_init(
     const hardware_interface::HardwareComponentInterfaceParams &params) {
   // generic setup
@@ -71,6 +71,34 @@ hardware_interface::CallbackReturn StsSystemInterface::on_init(
 
   RCLCPP_INFO(get_logger(), "Initialised %zu STS joints (%s @ %d baud)", n,
               serial_port_.c_str(), baud_rate_);
+  return hardware_interface::CallbackReturn::SUCCESS;
+}
+
+// Init hardware contact - open serial, ping servos, and verify bus is alive
+hardware_interface::CallbackReturn StsSystemInterface::on_configure(
+    const rclcpp_lifecycle::State & /*previous_state*/) {
+  // connect to serial port
+  if (!servo_.begin(baud_rate_, serial_port_.c_str())) {
+    RCLCPP_ERROR(get_logger(), "Failed to open serial port %s at %d baud",
+                 serial_port_.c_str(), baud_rate_);
+    return hardware_interface::CallbackReturn::ERROR;
+  }
+
+  // make sure can ping all motors
+  bool all_ok = true;
+  for (std::size_t i = 0; i < motor_ids_.size(); ++i) {
+    if (servo_.Ping(motor_ids_[i]) == -1) {
+      RCLCPP_ERROR(get_logger(), "Servo ID %d (%s) did not respond to Ping()",
+                   motor_ids_[i], info_.joints[i].name.c_str());
+      all_ok = false;
+    }
+  }
+  if (!all_ok) {
+    servo_.end();
+    return hardware_interface::CallbackReturn::ERROR;
+  }
+
+  RCLCPP_INFO(get_logger(), "All %zu servos responded", motor_ids_.size());
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
