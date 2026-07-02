@@ -37,6 +37,8 @@ hardware_interface::CallbackReturn StsSystemInterface::on_init(
         std::stod(info_.hardware_parameters.at("max_velocity_rad_per_s"));
     servo_speed_units_ =
         std::stoi(info_.hardware_parameters.at("servo_speed_units"));
+    servo_acc_units_ =
+        std::stoi(info_.hardware_parameters.at("servo_acc_units"));
 
     // per-joint settings, injected by ros2_control.urdf.xacro into each <joint>
     // block.
@@ -186,6 +188,39 @@ StsSystemInterface::read(const rclcpp::Time & /*time*/,
                   motor_ids_[i], info_.joints[i].name.c_str());
     }
   }
+  return hardware_interface::return_type::OK;
+}
+
+// Move the servos
+hardware_interface::return_type
+StsSystemInterface::write(const rclcpp::Time & /*time*/,
+                          const rclcpp::Duration &period) {
+  const std::size_t n = motor_ids_.size();
+  const double max_delta = max_velocity_rad_per_s_ *
+                           period.seconds(); // max velocity based on limits
+
+  std::vector<uint8_t> ids(n);
+  std::vector<int16_t> positions(n);
+  std::vector<uint16_t> speeds(n, static_cast<uint16_t>(servo_speed_units_));
+  std::vector<uint8_t> accs(n, static_cast<uint8_t>(servo_acc_units_));
+
+  for (std::size_t i = 0; i < n; ++i) {
+    // software velocity clamp: never step more than max_delta in a cycle.
+    const double target = hw_commands_position_[i];
+    const double delta =
+        std::clamp(target - last_cmd_positions_[i], -max_delta, max_delta);
+    const double next = last_cmd_positions_[i] + delta;
+    last_cmd_positions_[i] = next;
+
+    // record clamped position
+    ids[i] = motor_ids_[i];
+    positions[i] = static_cast<int16_t>(rad_to_ticks(next, i));
+  }
+
+  // one synchronized transaction drives all servos in a single bus write
+  servo_.SyncWritePosEx(ids.data(), static_cast<uint8_t>(n), positions.data(),
+                        speeds.data(), accs.data());
+
   return hardware_interface::return_type::OK;
 }
 

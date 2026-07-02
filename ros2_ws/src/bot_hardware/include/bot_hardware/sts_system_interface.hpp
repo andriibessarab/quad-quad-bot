@@ -45,6 +45,7 @@ private:
   // global limits
   double max_velocity_rad_per_s_;
   int servo_speed_units_;
+  int servo_acc_units_;
 
   // per-joint wiring
   std::vector<uint8_t> motor_ids_; // 0 - 253
