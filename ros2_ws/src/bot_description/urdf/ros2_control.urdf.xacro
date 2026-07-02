@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ros2_control">
-    <!-- Joint limits loaded from YAML -->
+    <!-- Joint limits and hardware info loaded from YAML -->
     <xacro:property name="limits" value="${xacro.load_yaml('$(find bot_description)/config/joint_limits.yaml')}"/>
+    <xacro:property name="motors" value="${xacro.load_yaml('$(find bot_description)/config/motor_params.yaml')}"/>
 
     <!-- Single ros2 control joint -->
-    <xacro:macro name="_ros2_control_joint" params="joint_name lower upper initial:=0.0">
+    <xacro:macro name="_ros2_control_joint" params="joint_name lower upper initial:=0.0 is_hardware:=false">
         <joint name="${joint_name}">
             <command_interface name="position">
                 <param name="min">${lower}</param>
@@ -15,43 +16,58 @@
             </state_interface>
             <state_interface name="velocity"/>
             <state_interface name="effort"/>
+            <!-- Additional params of physical motors if running hardware version -->
+            <xacro:if value="${is_hardware}">
+                <param name="motor_id">${motors['joints'][joint_name]['motor_id']}</param>
+                <param name="direction">${motors['joints'][joint_name]['direction']}</param>
+                <param name="offset_ticks">${motors['joints'][joint_name]['offset_ticks']}</param>
+                <param name="lower_ticks">${motors['joints'][joint_name]['lower_ticks']}</param>
+                <param name="upper_ticks">${motors['joints'][joint_name]['upper_ticks']}</param>
+            </xacro:if>
         </joint>
     </xacro:macro>
 
     <!-- Ros 2 Control Macro with all joints -->
-    <xacro:macro name="ros2_control" params="name hardware_plugin">
+    <xacro:macro name="ros2_control" params="name hardware_plugin is_hardware:=false">
         <ros2_control name="${name}" type="system">
             <hardware>
                 <plugin>${hardware_plugin}</plugin>
+                <xacro:if value="${is_hardware}">
+                    <param name="serial_port">${motors['bus']['serial_port']}</param>
+                    <param name="baud_rate">${motors['bus']['baud_rate']}</param>
+                    <param name="max_velocity_rad_per_s">${motors['bus']['max_velocity_rad_per_s']}</param>
+                    <param name="servo_speed_units">${motors['bus']['servo_speed_units']}</param>
+                    <param name="servo_acc_units">${motors['bus']['servo_acc_units']}</param>
+                </xacro:if>
             </hardware>
 
             <xacro:_ros2_control_joint joint_name="fr_haa_joint" lower="${limits['haa']['lower']}"
-                                       upper="${limits['haa']['upper']}"/>
+                                       upper="${limits['haa']['upper']}" is_hardware="${is_hardware}"/>
             <xacro:_ros2_control_joint joint_name="fr_hfe_joint" lower="${limits['hfe']['lower']}"
-                                       upper="${limits['hfe']['upper']}"/>
+                                       upper="${limits['hfe']['upper']}" is_hardware="${is_hardware}"/>
             <xacro:_ros2_control_joint joint_name="fr_kfe_joint" lower="${limits['kfe']['lower']}"
-                                       upper="${limits['kfe']['upper']}"/>
+                                       upper="${limits['kfe']['upper']}" is_hardware="${is_hardware}"/>
 
             <xacro:_ros2_control_joint joint_name="fl_haa_joint" lower="${limits['haa']['lower']}"
-                                       upper="${limits['haa']['upper']}"/>
+                                       upper="${limits['haa']['upper']}" is_hardware="${is_hardware}"/>
             <xacro:_ros2_control_joint joint_name="fl_hfe_joint" lower="${limits['hfe']['lower']}"
-                                       upper="${limits['hfe']['upper']}"/>
+                                       upper="${limits['hfe']['upper']}" is_hardware="${is_hardware}"/>
             <xacro:_ros2_control_joint joint_name="fl_kfe_joint" lower="${limits['kfe']['lower']}"
-                                       upper="${limits['kfe']['upper']}"/>
+                                       upper="${limits['kfe']['upper']}" is_hardware="${is_hardware}"/>
 
             <xacro:_ros2_control_joint joint_name="br_haa_joint" lower="${limits['haa']['lower']}"
-                                       upper="${limits['haa']['upper']}"/>
+                                       upper="${limits['haa']['upper']}" is_hardware="${is_hardware}"/>
             <xacro:_ros2_control_joint joint_name="br_hfe_joint" lower="${limits['hfe']['lower']}"
-                                       upper="${limits['hfe']['upper']}"/>
+                                       upper="${limits['hfe']['upper']}" is_hardware="${is_hardware}"/>
             <xacro:_ros2_control_joint joint_name="br_kfe_joint" lower="${limits['kfe']['lower']}"
-                                       upper="${limits['kfe']['upper']}"/>
+                                       upper="${limits['kfe']['upper']}" is_hardware="${is_hardware}"/>
 
             <xacro:_ros2_control_joint joint_name="bl_haa_joint" lower="${limits['haa']['lower']}"
-                                       upper="${limits['haa']['upper']}"/>
+                                       upper="${limits['haa']['upper']}" is_hardware="${is_hardware}"/>
             <xacro:_ros2_control_joint joint_name="bl_hfe_joint" lower="${limits['hfe']['lower']}"
-                                       upper="${limits['hfe']['upper']}"/>
+                                       upper="${limits['hfe']['upper']}" is_hardware="${is_hardware}"/>
             <xacro:_ros2_control_joint joint_name="bl_kfe_joint" lower="${limits['kfe']['lower']}"
-                                       upper="${limits['kfe']['upper']}"/>
+                                       upper="${limits['kfe']['upper']}" is_hardware="${is_hardware}"/>
         </ros2_control>
     </xacro:macro>
 </robot>

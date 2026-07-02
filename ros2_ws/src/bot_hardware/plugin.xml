@@ -1,0 +1,10 @@
+<library path="bot_hardware">
+  <class
+    name="bot_hardware/StsSystemInterface"
+    type="bot_hardware::StsSystemInterface"
+    base_class_type="hardware_interface::SystemInterface">
+    <description>
+      ros2_control hardware interface for Feetech STS3215-12V serial bus servos via USB-Serial adapter.
+    </description>
+  </class>
+</library>
