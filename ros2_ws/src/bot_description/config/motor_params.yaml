@@ -18,16 +18,16 @@ bus:
 joints:
   fr_haa_joint: { motor_id: 11, direction: +1, offset_ticks: 2056, lower_ticks: 1614, upper_ticks: 2499 }
   fr_hfe_joint: { motor_id: 12, direction: -1, offset_ticks: 1456, lower_ticks: 1223, upper_ticks: 3292 }
-  fr_kfe_joint: { motor_id: 13, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  fr_kfe_joint: { motor_id: 13, direction: +1, offset_ticks: 3201, lower_ticks: 2964, upper_ticks: 3697 }
 
   fl_haa_joint: { motor_id: 21, direction: -1, offset_ticks: 1897, lower_ticks: 1461, upper_ticks: 2333 }
-  fl_hfe_joint: { motor_id: 22, direction: +1, offset_ticks: 2087, lower_ticks: 0215, upper_ticks: 2295 }
-  fl_kfe_joint: { motor_id: 23, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  fl_hfe_joint: { motor_id: 22, direction: +1, offset_ticks: 2087, lower_ticks: 215,  upper_ticks: 2295 }
+  fl_kfe_joint: { motor_id: 23, direction: -1, offset_ticks: 1165, lower_ticks: 753,  upper_ticks: 1396 }
 
   br_haa_joint: { motor_id: 31, direction: -1, offset_ticks: 2389, lower_ticks: 1908, upper_ticks: 2870 }
-  br_hfe_joint: { motor_id: 32, direction: +1, offset_ticks: 2785, lower_ticks: 0922, upper_ticks: 3005 }
-  br_kfe_joint: { motor_id: 33, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  br_hfe_joint: { motor_id: 32, direction: +1, offset_ticks: 2785, lower_ticks: 922,  upper_ticks: 3005 }
+  br_kfe_joint: { motor_id: 33, direction: -1, offset_ticks: 1798, lower_ticks: 1331, upper_ticks: 2045 }
 
-  bl_haa_joint: { motor_id: 41, direction: +1, offset_ticks: 1399, lower_ticks: 0939, upper_ticks: 1858 }
+  bl_haa_joint: { motor_id: 41, direction: +1, offset_ticks: 1399, lower_ticks: 939,  upper_ticks: 1858 }
   bl_hfe_joint: { motor_id: 42, direction: -1, offset_ticks: 1535, lower_ticks: 1319, upper_ticks: 3385 }
-  bl_kfe_joint: { motor_id: 43, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  bl_kfe_joint: { motor_id: 43, direction: +1, offset_ticks: 3065, lower_ticks: 2863, upper_ticks: 3459 }
