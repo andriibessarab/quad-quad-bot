@@ -144,17 +144,6 @@ hardware_interface::CallbackReturn StsSystemInterface::on_activate(
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
-int StsSystemInterface::rad_to_ticks(double rad, std::size_t i) const {
-  const int ticks =
-      static_cast<int>(std::lround(directions_[i] * rad / kRadPerTick)) +
-      offset_ticks_[i];
-  return std::clamp(ticks, 0, 4095);
-}
-
-double StsSystemInterface::ticks_to_rad(int ticks, std::size_t i) const {
-  return directions_[i] * (ticks - offset_ticks_[i]) * kRadPerTick;
-}
-
 // On deactivation, turn off motor torques
 hardware_interface::CallbackReturn StsSystemInterface::on_deactivate(
     const rclcpp_lifecycle::State & /*previous_state*/) {
@@ -250,6 +239,21 @@ StsSystemInterface::write(const rclcpp::Time & /*time*/,
                         speeds.data(), accs.data());
 
   return hardware_interface::return_type::OK;
+}
+
+// converts joint position in radians to raw servo ticks, applying per-joint
+// direction and zero offset.
+int StsSystemInterface::rad_to_ticks(double rad, std::size_t i) const {
+  const int ticks =
+      static_cast<int>(std::lround(directions_[i] * rad / kRadPerTick)) +
+      offset_ticks_[i];
+  return std::clamp(ticks, 0, 4095);
+}
+
+// converts raw servo ticks to joint position in radians, applying per-joint
+// direction and zero offset.
+double StsSystemInterface::ticks_to_rad(int ticks, std::size_t i) const {
+  return directions_[i] * (ticks - offset_ticks_[i]) * kRadPerTick;
 }
 
 } // namespace bot_hardware
