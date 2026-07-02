@@ -5,6 +5,7 @@ bus:
   baud_rate: 1000000           # 1Mbps. Serial communication speed between your computer and the servo bu
   max_velocity_rad_per_s: 0.5  # Software velocity clamp: max rad/s any joint can move per write() cycle.
   servo_speed_units: 200       # Additional ardware-enforced speed cap on top of the software clamp above.
+  servo_acc_units: 20           # Hardware acceleration ramp.
 
 # Per-joint motor wiring.
 #

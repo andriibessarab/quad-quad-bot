@@ -35,6 +35,7 @@
                     <param name="baud_rate">${motors['bus']['baud_rate']}</param>
                     <param name="max_velocity_rad_per_s">${motors['bus']['max_velocity_rad_per_s']}</param>
                     <param name="servo_speed_units">${motors['bus']['servo_speed_units']}</param>
+                    <param name="servo_acc_units">${motors['bus']['servo_acc_units']}</param>
                 </xacro:if>
             </hardware>
 
