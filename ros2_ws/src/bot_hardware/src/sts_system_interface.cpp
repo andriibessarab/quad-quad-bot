@@ -169,6 +169,33 @@ hardware_interface::CallbackReturn StsSystemInterface::on_deactivate(
   return hardware_interface::CallbackReturn::SUCCESS;
 }
 
+// Export used by controller of all measurable values offered
+std::vector<hardware_interface::StateInterface>
+StsSystemInterface::export_state_interfaces() {
+  std::vector<hardware_interface::StateInterface> ifaces;
+  for (std::size_t i = 0; i < info_.joints.size(); ++i) {
+    ifaces.emplace_back(info_.joints[i].name,
+                        hardware_interface::HW_IF_POSITION, &hw_positions_[i]);
+    ifaces.emplace_back(info_.joints[i].name,
+                        hardware_interface::HW_IF_VELOCITY, &hw_velocities_[i]);
+    ifaces.emplace_back(info_.joints[i].name, hardware_interface::HW_IF_EFFORT,
+                        &hw_efforts_[i]);
+  }
+  return ifaces;
+}
+
+// Export used by controller that it is allowed to write
+std::vector<hardware_interface::CommandInterface>
+StsSystemInterface::export_command_interfaces() {
+  std::vector<hardware_interface::CommandInterface> ifaces;
+  for (std::size_t i = 0; i < info_.joints.size(); ++i) {
+    ifaces.emplace_back(info_.joints[i].name,
+                        hardware_interface::HW_IF_POSITION,
+                        &hw_commands_position_[i]);
+  }
+  return ifaces;
+}
+
 // Update feedback
 hardware_interface::return_type
 StsSystemInterface::read(const rclcpp::Time & /*time*/,
@@ -192,6 +219,7 @@ StsSystemInterface::read(const rclcpp::Time & /*time*/,
 }
 
 // Move the servos
+// TODO implement joint limits
 hardware_interface::return_type
 StsSystemInterface::write(const rclcpp::Time & /*time*/,
                           const rclcpp::Duration &period) {
