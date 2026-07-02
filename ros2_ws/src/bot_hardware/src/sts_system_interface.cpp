@@ -212,7 +212,6 @@ StsSystemInterface::read(const rclcpp::Time & /*time*/,
 }
 
 // Move the servos
-// TODO implement joint limits
 hardware_interface::return_type
 StsSystemInterface::write(const rclcpp::Time & /*time*/,
                           const rclcpp::Duration &period) {
@@ -226,6 +225,11 @@ StsSystemInterface::write(const rclcpp::Time & /*time*/,
   std::vector<uint8_t> accs(n, static_cast<uint8_t>(servo_acc_units_));
 
   for (std::size_t i = 0; i < n; ++i) {
+    // clamp to calibrated physical limits (tick bounds converted to rad)
+    double target = hw_commands_position_[i];
+    target = std::max(target, ticks_to_rad(lower_ticks_[i], i));
+    target = std::min(target, ticks_to_rad(upper_ticks_[i], i));
+
     // software velocity clamp: never step more than max_delta in a cycle.
     const double target = hw_commands_position_[i];
     const double delta =
