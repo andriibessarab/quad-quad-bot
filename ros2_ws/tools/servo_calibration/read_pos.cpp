@@ -1,26 +1,24 @@
 // Script used to preview STS3215 positions in real
 // time independent of ROS WS for calibration purposes.
 
-
 #include <scservo/SCServo.h>
 
-#include <csignal>
+#include <chrono>
 #include <cmath>
+#include <csignal>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <string>
 #include <thread>
-#include <chrono>
 
 static volatile bool running = true;
 
-static void handle_sigint(int) {
-  running = false;
-}
+static void handle_sigint(int) { running = false; }
 
 static void print_usage(const char *prog) {
-  std::cerr << "Usage: " << prog << " <servo_id> [--port <dev>] [--baud <rate>]\n"
+  std::cerr << "Usage: " << prog
+            << " <servo_id> [--port <dev>] [--baud <rate>]\n"
             << "  servo_id   Motor ID to read (e.g. 11 for fr_haa_joint)\n"
             << "  --port     Serial device (default: /dev/ttyUSB0)\n"
             << "  --baud     Baud rate     (default: 1000000)\n";
@@ -68,7 +66,8 @@ int main(int argc, char **argv) {
   }
 
   if (servo.EnableTorque(static_cast<uint8_t>(id), 0) == 0) {
-    std::cerr << "Warning: failed to disable torque on servo " << id << " — move with care\n";
+    std::cerr << "Warning: failed to disable torque on servo " << id
+              << " — move with care\n";
   }
 
   std::cout << "Servo " << id << " ready — torque disabled, move joint freely\n"
@@ -80,7 +79,8 @@ int main(int argc, char **argv) {
     if (servo.FeedBack(static_cast<uint8_t>(id)) != 0) {
       int ticks = servo.ReadPos(-1);
       double rad = ticks * kRadPerTick;
-      std::cout << "\rPos: " << ticks << " ticks  (" << rad << " rad)   " << std::flush;
+      std::cout << "\rPos: " << ticks << " ticks  (" << rad << " rad)   "
+                << std::flush;
     } else {
       std::cout << "\rRead failed — retrying..." << std::flush;
     }
