@@ -12,20 +12,22 @@ bus:
 # motor_id:     ID burned onto the servo
 # direction:    +1 or -1. Flips motor direction
 # offset_ticks: 0-4095. Value where the joint is at URDF zero (0 rad).
+# lower_ticks:  Minimum tick the joint can physically reach.
+# upper_ticks:  Maximum tick the joint can physically reach.
 
 joints:
-  fr_haa_joint: { motor_id: 11,  direction:  +1, offset_ticks: 2048 }
-  fr_hfe_joint: { motor_id: 12,  direction:  +1, offset_ticks: 2048 }
-  fr_kfe_joint: { motor_id: 13,  direction:  +1, offset_ticks: 2048 }
+  fr_haa_joint: { motor_id: 11, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  fr_hfe_joint: { motor_id: 12, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  fr_kfe_joint: { motor_id: 13, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
 
-  fl_haa_joint: { motor_id: 21,  direction:  +1, offset_ticks: 2048 }
-  fl_hfe_joint: { motor_id: 22,  direction:  +1, offset_ticks: 2048 }
-  fl_kfe_joint: { motor_id: 23,  direction:  +1, offset_ticks: 2048 }
+  fl_haa_joint: { motor_id: 21, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  fl_hfe_joint: { motor_id: 22, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  fl_kfe_joint: { motor_id: 23, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
 
-  br_haa_joint: { motor_id: 31,  direction:  +1, offset_ticks: 2048 }
-  br_hfe_joint: { motor_id: 32,  direction:  +1, offset_ticks: 2048 }
-  br_kfe_joint: { motor_id: 33,  direction:  +1, offset_ticks: 2048 }
+  br_haa_joint: { motor_id: 31, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  br_hfe_joint: { motor_id: 32, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  br_kfe_joint: { motor_id: 33, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
 
-  bl_haa_joint: { motor_id: 41, direction:  +1, offset_ticks: 2048 }
-  bl_hfe_joint: { motor_id: 42, direction:  +1, offset_ticks: 2048 }
-  bl_kfe_joint: { motor_id: 43, direction:  +1, offset_ticks: 2048 }
+  bl_haa_joint: { motor_id: 41, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  bl_hfe_joint: { motor_id: 42, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  bl_kfe_joint: { motor_id: 43, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
