@@ -1,7 +1,7 @@
 # Hardware configuration for the physical robot.
 
 bus:
-  serial_port: /dev/ttyUSB0
+  serial_port: /dev/ttyACM0
   baud_rate: 1000000           # 1Mbps. Serial communication speed between your computer and the servo bu
   max_velocity_rad_per_s: 0.5  # Software velocity clamp: max rad/s any joint can move per write() cycle.
   servo_speed_units: 200       # Additional ardware-enforced speed cap on top of the software clamp above.
@@ -16,18 +16,18 @@ bus:
 # upper_ticks:  Maximum tick the joint can physically reach.
 
 joints:
-  fr_haa_joint: { motor_id: 11, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  fr_haa_joint: { motor_id: 11, direction: +1, offset_ticks: 2056, lower_ticks: 1614, upper_ticks: 2499 }
   fr_hfe_joint: { motor_id: 12, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
   fr_kfe_joint: { motor_id: 13, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
 
-  fl_haa_joint: { motor_id: 21, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  fl_haa_joint: { motor_id: 21, direction: -1, offset_ticks: 2048, lower_ticks: 1461, upper_ticks: 2333 }
   fl_hfe_joint: { motor_id: 22, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
   fl_kfe_joint: { motor_id: 23, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
 
-  br_haa_joint: { motor_id: 31, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  br_haa_joint: { motor_id: 31, direction: -1, offset_ticks: 2389, lower_ticks: 1908, upper_ticks: 2870 }
   br_hfe_joint: { motor_id: 32, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
   br_kfe_joint: { motor_id: 33, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
 
-  bl_haa_joint: { motor_id: 41, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
+  bl_haa_joint: { motor_id: 41, direction: +1, offset_ticks: 1399, lower_ticks: 0939, upper_ticks: 1858 }
   bl_hfe_joint: { motor_id: 42, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
   bl_kfe_joint: { motor_id: 43, direction: +1, offset_ticks: 2048, lower_ticks: null, upper_ticks: null }
