@@ -51,6 +51,8 @@ private:
   std::vector<uint8_t> motor_ids_; // 0 - 253
   std::vector<double> directions_; // +1.0 / -1.0
   std::vector<int> offset_ticks_;  // tick value at URDF zero
+  std::vector<int> lower_ticks_;   // physical min tick
+  std::vector<int> upper_ticks_;   // physical max tick
 
   // ros2_control state / command storage
   std::vector<double> hw_positions_;

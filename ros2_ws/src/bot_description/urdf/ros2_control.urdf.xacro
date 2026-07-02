@@ -21,6 +21,8 @@
                 <param name="motor_id">${motors['joints'][joint_name]['motor_id']}</param>
                 <param name="direction">${motors['joints'][joint_name]['direction']}</param>
                 <param name="offset_ticks">${motors['joints'][joint_name]['offset_ticks']}</param>
+                <param name="lower_ticks">${motors['joints'][joint_name]['lower_ticks']}</param>
+                <param name="upper_ticks">${motors['joints'][joint_name]['upper_ticks']}</param>
             </xacro:if>
         </joint>
     </xacro:macro>

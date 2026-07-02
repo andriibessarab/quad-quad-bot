@@ -22,6 +22,8 @@ hardware_interface::CallbackReturn StsSystemInterface::on_init(
   motor_ids_.resize(n);
   directions_.resize(n);
   offset_ticks_.resize(n);
+  lower_ticks_.resize(n);
+  upper_ticks_.resize(n);
   hw_positions_.assign(n, 0.0);
   hw_velocities_.assign(n, 0.0);
   hw_efforts_.assign(n, 0.0);
@@ -47,6 +49,8 @@ hardware_interface::CallbackReturn StsSystemInterface::on_init(
       motor_ids_[i] = static_cast<uint8_t>(std::stoi(p.at("motor_id")));
       directions_[i] = std::stod(p.at("direction"));
       offset_ticks_[i] = std::stoi(p.at("offset_ticks"));
+      lower_ticks_[i] = std::stoi(p.at("lower_ticks"));
+      upper_ticks_[i] = std::stoi(p.at("upper_ticks"));
     }
   } catch (const std::out_of_range &e) {
     RCLCPP_ERROR(get_logger(), "Missing required hardware/joint param %s",
