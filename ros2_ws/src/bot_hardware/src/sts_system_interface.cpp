@@ -104,6 +104,29 @@ hardware_interface::CallbackReturn StsSystemInterface::on_configure(
     return hardware_interface::CallbackReturn::ERROR;
   }
 
+  // burn EEPROM limits (only when the stored value differs due to finite
+  // write-cycle lifetime)
+  for (std::size_t i = 0; i < motor_ids_.size(); ++i) {
+    if (lower_ticks_[i] == -1 || upper_ticks_[i] == -1)
+      continue;
+    const int cur_lo =
+        servo_.readWord(motor_ids_[i], SMS_STS_MIN_ANGLE_LIMIT_L);
+    const int cur_hi =
+        servo_.readWord(motor_ids_[i], SMS_STS_MAX_ANGLE_LIMIT_L);
+    if (cur_lo == lower_ticks_[i] && cur_hi == upper_ticks_[i])
+      continue;
+    servo_.unLockEeprom(motor_ids_[i]);
+    servo_.writeWord(motor_ids_[i], SMS_STS_MIN_ANGLE_LIMIT_L,
+                     static_cast<uint16_t>(lower_ticks_[i]));
+    servo_.writeWord(motor_ids_[i], SMS_STS_MAX_ANGLE_LIMIT_L,
+                     static_cast<uint16_t>(upper_ticks_[i]));
+    servo_.LockEeprom(motor_ids_[i]);
+    RCLCPP_INFO(get_logger(),
+                "Servo ID %d (%s): updated EEPROM limits [%d, %d]",
+                motor_ids_[i], info_.joints[i].name.c_str(), lower_ticks_[i],
+                upper_ticks_[i]);
+  }
+
   RCLCPP_INFO(get_logger(), "All %zu servos responded", motor_ids_.size());
   return hardware_interface::CallbackReturn::SUCCESS;
 }
@@ -231,7 +254,6 @@ StsSystemInterface::write(const rclcpp::Time & /*time*/,
     target = std::min(target, ticks_to_rad(upper_ticks_[i], i));
 
     // software velocity clamp: never step more than max_delta in a cycle.
-    const double target = hw_commands_position_[i];
     const double delta =
         std::clamp(target - last_cmd_positions_[i], -max_delta, max_delta);
     const double next = last_cmd_positions_[i] + delta;
