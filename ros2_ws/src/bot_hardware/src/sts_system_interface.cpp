@@ -250,8 +250,11 @@ StsSystemInterface::write(const rclcpp::Time & /*time*/,
   for (std::size_t i = 0; i < n; ++i) {
     // clamp to calibrated physical limits (tick bounds converted to rad)
     double target = hw_commands_position_[i];
-    target = std::max(target, ticks_to_rad(lower_ticks_[i], i));
-    target = std::min(target, ticks_to_rad(upper_ticks_[i], i));
+
+    // which of the two is lower and upper rad bound depends on direction; hence using min and max to find out
+	  const double rad_a = ticks_to_rad(lower_ticks_[i], i);
+	  const double rad_b = ticks_to_rad(upper_ticks_[i], i);
+	  target = std::clamp(target, std::min(rad_a, rad_b), std::max(rad_a, rad_b));
 
     // software velocity clamp: never step more than max_delta in a cycle.
     const double delta =
