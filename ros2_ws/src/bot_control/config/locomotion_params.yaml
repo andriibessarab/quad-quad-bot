@@ -51,5 +51,5 @@ gait_planner:
 
     # Trot gait parameters
     step_height: 0.035     # foot lift height during swing  (m)
-    swing_duration: 0.15   # time for swing phase           (s)
-    stance_duration: 0.25  # time for stance phase          (s); duty factor=0.64
+    swing_duration: 0.3   # time for swing phase            (s)
+    stance_duration: 0.9  # time for stance phase           (s)
