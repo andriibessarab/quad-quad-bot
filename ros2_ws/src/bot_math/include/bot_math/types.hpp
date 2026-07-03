@@ -39,13 +39,15 @@ struct LimbJointAngles {
 enum class GaitMode {
   Stand,
   Trot,
+  Crawl,
 };
 
 struct LimbTrajectoryConfig {
-  std::string name;    // limb name
-  bool is_right;       // true if this limb is on the right side
-  bool is_back;        // true if this limb is on the back half
-  double phase_offset; // phase shift for this limb in the gait cycle
+  std::string name;          // limb name
+  bool is_right;             // true if this limb is on the right side
+  bool is_back;              // true if this limb is on the back half
+  double phase_offset;       // trot phase shift (diagonal pairs) for this limb
+  double crawl_phase_offset; // crawl phase shift (one limb at a time)
   geometry_msgs::msg::Point home_point;
 };
 

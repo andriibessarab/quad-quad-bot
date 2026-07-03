@@ -11,14 +11,21 @@ LimbTrajectory::LimbTrajectory(const LimbTrajectoryConfig &config)
 geometry_msgs::msg::Point
 LimbTrajectory::compute_target(const LimbTrajectoryInput &input) {
   geometry_msgs::msg::Point target = config_.home_point;
-  double limb_phase = std::fmod(input.global_phase + config_.phase_offset, 1.0);
+  const double phase_offset = (input.gait_mode == GaitMode::Crawl)
+                                  ? config_.crawl_phase_offset
+                                  : config_.phase_offset;
+  double limb_phase = std::fmod(input.global_phase + phase_offset, 1.0);
   if (limb_phase < 0.0) {
     limb_phase += 1.0;
   }
 
   switch (input.gait_mode) {
-    // --- TROT MODE ----
-  case GaitMode::Trot: {
+    // --- TROT / CRAWL MODE ----
+    // Both are duty-cycle gaits (stance then swing); they only differ in
+    // per-limb phase offset (above) and the swing/stance timing supplied by
+    // the caller, so they share this branch.
+  case GaitMode::Trot:
+  case GaitMode::Crawl: {
     // deadband
     if (std::abs(input.step_x) < 1e-4 && std::abs(input.step_y) < 1e-4) {
       return config_.home_point;
