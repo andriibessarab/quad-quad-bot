@@ -21,7 +21,7 @@
     # Home position
     home_x: 0.0
     home_y: 0.0298
-    home_z: -0.14
+    home_z: -0.16
 
     # Sourced from leg_x/leg_y in robot.urdf.xacro.
     hip_x_offset: 0.0828  # fwd/bwd distance from body center to hip    (m)
@@ -49,7 +49,9 @@ gait_planner:
   ros__parameters:
     control_loop_frequency: 100.0  # Hz
 
-    # Trot gait parameters
-    step_height: 0.035     # foot lift height during swing  (m)
+    # Gait timing, shared by trot and crawl modes.
+    # duty factor = stance / (stance + swing)
+    # ideally 0.5 for trot; 0.75 for crawl
+    step_height: 0.037    # foot lift height during swing  (m)
     swing_duration: 0.3   # time for swing phase            (s)
     stance_duration: 0.9  # time for stance phase           (s)

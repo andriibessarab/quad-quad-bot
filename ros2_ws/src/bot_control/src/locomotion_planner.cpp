@@ -40,7 +40,7 @@ const std::string
 class LimbTrajectoryGenerator : public rclcpp::Node {
 public:
   LimbTrajectoryGenerator()
-      : Node(GAIT_PLANNER_NODE_NAME), gait_state_(bot_math::GaitMode::Trot) {
+      : Node(GAIT_PLANNER_NODE_NAME), gait_state_(bot_math::GaitMode::Crawl) {
     // get params
     try {
       control_loop_frequency_ =
@@ -68,6 +68,8 @@ public:
 
       hip_x_.reserve(limb_prefixes_.size());
       hip_y_.reserve(limb_prefixes_.size());
+      is_right_.reserve(limb_prefixes_.size());
+      is_back_.reserve(limb_prefixes_.size());
       for (const auto &prefix : limb_prefixes_) {
         bool is_back = this->declare_parameter<bool>(
             LIMB_INFO_PARAM_NAME + "." + prefix + "." + IS_BACK_PARAM_NAME);
@@ -76,6 +78,8 @@ public:
         // front limbs are +x, back are -x; left limbs are +y, right are -y
         hip_x_.push_back(is_back ? -hip_x_offset : +hip_x_offset);
         hip_y_.push_back(is_right ? -hip_y_offset : +hip_y_offset);
+        is_back_.push_back(is_back);
+        is_right_.push_back(is_right);
       }
 
     } catch (
@@ -147,9 +151,25 @@ private:
       bot_math::LimbTrajectoryConfig config;
       config.name = prefix;
       config.home_point = home_point_;
+      config.is_right = is_right_[i];
+      config.is_back = is_back_[i];
 
       // trot diagonal pairs: fl+br lead at phase 0, fr+bl follow at phase 0.5
       config.phase_offset = (prefix == "fl" || prefix == "br") ? 0.0 : 0.5;
+
+      // crawl sequence: exactly one limb swings at a time while the other
+      // three stay planted, hind leg lifting before its ipsilateral front
+      // leg (as in a natural animal walk), sides alternating: back-right ->
+      // front-right -> back-left -> front-left, each a quarter-cycle apart.
+      if (config.is_back && config.is_right) {
+        config.crawl_phase_offset = 0.75; // br
+      } else if (!config.is_back && config.is_right) {
+        config.crawl_phase_offset = 0.5; // fr
+      } else if (config.is_back && !config.is_right) {
+        config.crawl_phase_offset = 0.25; // bl
+      } else {
+        config.crawl_phase_offset = 0.0; // fl
+      }
 
       limb_trajectories_.emplace_back(config);
     }
@@ -182,6 +202,8 @@ private:
   std::vector<std::string> limb_prefixes_;
   std::vector<double> hip_x_;
   std::vector<double> hip_y_;
+  std::vector<bool> is_right_;
+  std::vector<bool> is_back_;
   geometry_msgs::msg::Point home_point_;
   double step_height_;
   double swing_duration_;
