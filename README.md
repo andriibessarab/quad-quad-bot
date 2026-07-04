@@ -15,7 +15,7 @@
 - **Electronics** — custom power distribution, motor drivers, onboard compute
 - **Software** — ROS 2 (Jazzy), Gazebo Harmonic simulation, inverse kinematics, gait planning, and feedback loops.
 
-<i> Current status: simulation is running with a trot gait. Hardware assembly is in progress. </i>
+<i> Current status: simulation is running with a trot gait. Hardware assembled. Currently tuning walking gaits(crawl, trot, and maybe gallop). </i>
 
 <hr/>
 
@@ -34,12 +34,12 @@
   </tr>
   <tr>
     <td align="center" width="50%">
-      <img src="docs/assets/images/physical.png" alt="Physical robot" style="width:360px;height:240px;object-fit:cover;"/>
+      <img src="docs/assets/images/physical.jpeg" alt="Physical robot" style="width:360px;height:240px;object-fit:cover;"/>
       <br/><br/><b>Hardware <i>(WIP)</i></b>
     </td>
     <td align="center" width="50%">
-      <img src="" alt="" style="width:360px;height:240px;object-fit:cover;"/>
-      <br/><br/><b>Nothing here yet :)</b>
+      <img src="docs/assets/images/crawl_walk_demo.gif" alt="Walk Demo" style="width:360px;height:240px;object-fit:cover;"/>
+      <br/><br/><b>Walk Demo</b>
     </td>
   </tr>
 </table>
@@ -61,7 +61,7 @@ quad-quad-bot/
 <hr/>
 
 ## Documentation
-Full technical documentation can be found [here](https://quad-quad-bot.andriibessarab.com/).
+Full technical documentation can be found [here](https://quad-quad-bot.andriibessarab.com/). It is currently in TODO state.
 
 <hr/>
 
